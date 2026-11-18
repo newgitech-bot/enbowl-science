@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """CosyVoice 2 로 준서님 목소리를 복제해 narration.json 을 읽는다.
-참고 음성은 Secrets 의 VOICE_REF_B64 (opus, base64) 에서 꺼내 쓰고 저장소에는 남기지 않는다.
+참고 음성은 voice/ref.flac.gpg 를 Secrets 의 VOICE_KEY 로 복호화해서 쓴다 (원본은 저장소에 없음).
 사용법 (CosyVoice 폴더 안에서): python ../scripts/tts_clone.py ../posts/<폴더> <출력폴더이름>
 """
 import base64, json, os, subprocess, sys, wave
@@ -14,14 +14,11 @@ REF_TEXT = ("안녕하세요, 앤볼입니다. 볼링을 오래 치다 보면, �
             "세계 랭커 열한 명이 참여한 실험인데요, 결과를 보면 생각보다 간단한 데서 답을 찾을 수 있습니다. "
             "끝까지 보시고, 다음 게임에 꼭 적용해 보세요!")
 post = Path(sys.argv[1]); outname = sys.argv[2] if len(sys.argv) > 2 else "narration_clone"
-# 참고 음성: 저장소의 voice/ref.flac.gpg 를 Secrets 의 VOICE_KEY 로 복호화 (없으면 예전 VOICE_REF_B64)
+# 참고 음성: 저장소의 voice/ref.flac.gpg 를 Secrets 의 VOICE_KEY 로 복호화
 enc = Path(__file__).resolve().parent.parent / "voice" / "ref.flac.gpg"
-if os.environ.get("VOICE_KEY") and enc.exists():
-    subprocess.run(["gpg", "--batch", "--yes", "--pinentry-mode", "loopback", "--passphrase", os.environ["VOICE_KEY"],
-                    "-o", "/tmp/ref.flac", "-d", str(enc)], check=True)
-    src = "/tmp/ref.flac"
-else:
-    Path("/tmp/ref.opus").write_bytes(base64.b64decode(os.environ["VOICE_REF_B64"])); src = "/tmp/ref.opus"
+subprocess.run(["gpg", "--batch", "--yes", "--pinentry-mode", "loopback", "--passphrase", os.environ["VOICE_KEY"],
+                "-o", "/tmp/ref.flac", "-d", str(enc)], check=True)
+src = "/tmp/ref.flac"
 subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", src, "-ac", "1", "-ar", "24000", "/tmp/ref.wav"], check=True)
 
 prompt_text = os.environ.get("VOICE_REF_TEXT", "").strip() or REF_TEXT

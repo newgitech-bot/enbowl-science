@@ -1,0 +1,29 @@
+name: Generate images (GPT)
+
+# requests/images/*.json 이 바뀌면 아직 없는 그림만 생성해서 같은 브랜치에 커밋
+on:
+  push:
+    branches-ignore: [main]
+    paths: ["requests/images/*.json"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  gen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - run: python scripts/gen_images.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      - run: |
+          git config user.name "enbowl-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/gpt || true
+          git diff --cached --quiet || (git commit -m "GPT 일러스트 생성 [skip ci]" && git push)
