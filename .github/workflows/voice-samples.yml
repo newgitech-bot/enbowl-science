@@ -1,0 +1,37 @@
+name: Voice samples (Google TTS)
+
+# Google Cloud TTS 한국어 목소리 샘플 생성. Secrets 에 GCP_TTS_KEY 가 있어야 동작.
+on:
+  push:
+    branches-ignore: [main]
+    paths: ["samples/request-google.txt", "scripts/tts_google.py"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  samples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check key
+        id: key
+        env:
+          K: ${{ secrets.GCP_TTS_KEY }}
+        run: if [ -n "$K" ]; then echo "ok=1" >> $GITHUB_OUTPUT; else echo "GCP_TTS_KEY 없음, 건너뜀"; fi
+      - if: steps.key.outputs.ok == '1'
+        env:
+          GCP_TTS_KEY: ${{ secrets.GCP_TTS_KEY }}
+        run: |
+          pip install google-cloud-texttospeech
+          python scripts/tts_google.py --samples
+      - if: steps.key.outputs.ok == '1'
+        run: |
+          git config user.name "enbowl-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add samples/voices
+          git diff --cached --quiet || (git commit -m "Google 목소리 샘플 [skip ci]" && git push)
