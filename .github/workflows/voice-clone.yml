@@ -1,0 +1,54 @@
+name: Voice clone (CosyVoice 2)
+
+# 준서님 목소리(Secrets: VOICE_REF_B64)로 나레이션 생성. 참고 음성은 저장소에 남지 않음.
+on:
+  push:
+    branches-ignore: [main]
+    paths: ["samples/request-clone.txt", "scripts/tts_clone.py", ".github/workflows/voice-clone.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  clone:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Check secret
+        id: key
+        env:
+          K: ${{ secrets.VOICE_KEY }}
+        run: if [ -n "$K" ]; then echo "ok=1" >> $GITHUB_OUTPUT; else echo "VOICE_KEY 없음, 건너뜀"; fi
+      - name: Install CosyVoice
+        if: steps.key.outputs.ok == '1'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sox libsox-dev ffmpeg
+          git clone --recursive --depth 1 https://github.com/FunAudioLLM/CosyVoice.git
+          cd CosyVoice
+          pip install -q "setuptools<70" wheel
+          W=$(grep -i "^openai-whisper" requirements.txt || echo openai-whisper==20231117)
+          pip install -q --no-build-isolation "$W"
+          grep -viE "tensorrt|deepspeed|onnxruntime-gpu|^--extra-index|^openai-whisper" requirements.txt > req.txt
+          pip install -q -r req.txt onnxruntime faster-whisper
+          python -c "from huggingface_hub import snapshot_download; snapshot_download('FunAudioLLM/CosyVoice2-0.5B', local_dir='pretrained_models/CosyVoice2-0.5B')"
+      - name: Generate
+        if: steps.key.outputs.ok == '1'
+        env:
+          VOICE_KEY: ${{ secrets.VOICE_KEY }}
+          VOICE_REF_B64: ${{ secrets.VOICE_REF_B64 }}
+          VOICE_REF_TEXT: ${{ vars.VOICE_REF_TEXT }}
+        run: |
+          cd CosyVoice
+          python ../scripts/tts_clone.py ../posts/2026-11-27-EP05 narration_clone
+      - name: Commit
+        if: steps.key.outputs.ok == '1'
+        run: |
+          git config user.name "enbowl-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add posts/*/narration_clone/
+          git diff --cached --quiet || (git commit -m "목소리 복제 나레이션 [skip ci]" && git push)

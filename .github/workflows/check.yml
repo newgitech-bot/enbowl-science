@@ -1,0 +1,13 @@
+name: Check post
+
+# PR 에서 카드 수, 영상 크기, 캡션 길이, 해시태그 수를 미리 검사 (게시하지 않음)
+on:
+  pull_request:
+    paths: ["posts/**"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: python scripts/publish.py --all --dry-run
