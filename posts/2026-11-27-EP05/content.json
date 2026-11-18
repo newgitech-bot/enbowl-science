@@ -1,17 +1,86 @@
 {
   "format": "reel",
+  "style": "character",
   "ep": 5,
   "publish_date": "2026-11-27",
   "kind": "논문 리뷰",
-  "scenes": [
-    {"type": "hook", "text": "압박을 받으면\n프로도\n서두릅니다", "dur": 3.0},
-    {"type": "stat", "value": "11명", "label": "세계 랭커 볼러에게\n목표·벌칙·순위표로\n압박을 줬습니다", "dur": 3.4},
-    {"type": "count", "from": 46, "to": 31, "unit": "%", "decimals": 0, "axis_min": 0,
-     "label": "스트라이크 비율", "note": "편할 때 46% → 압박 속 31%\n(통계 검정 전 수치)", "dur": 4.6},
-    {"type": "list", "title": "압박 속에서\n달라진 것", "items": ["불안감 상승", "슬라이드 속도 1.4% 증가", "어깨 스윙도 빨라지는 경향"], "dur": 5.0},
-    {"type": "statement", "text": "자신감은\n그대로", "sub": "몸만 먼저 서둘렀습니다", "dur": 3.2},
-    {"type": "outro", "label": "지공사 코멘트", "text": "중요한 순간일수록\n4·5스텝 리듬을\n지키세요", "dur": 4.2}
-  ],
+  "thumb_offset_ms": 1500,
+  "overlay": {
+    "captions": [
+      {
+        "start": 0.0,
+        "end": 3.0,
+        "text": "중요한 프레임만 되면\n공이 *빗나가는* 이유"
+      },
+      {
+        "start": 3.0,
+        "end": 7.5,
+        "text": "세계 랭커 11명에게\n일부러 *압박*을 걸었더니"
+      },
+      {
+        "start": 7.5,
+        "end": 13.0,
+        "text": "*스텝이 빨라졌습니다*"
+      },
+      {
+        "start": 13.0,
+        "end": 17.5,
+        "text": "그 결과"
+      }
+    ],
+    "chips": [
+      {
+        "start": 3.8,
+        "end": 7.5,
+        "text": "목표: 10구 중 스트라이크 6개",
+        "y": 1150
+      },
+      {
+        "start": 4.6,
+        "end": 7.5,
+        "text": "못 하면 추가 훈련",
+        "y": 1250
+      },
+      {
+        "start": 5.4,
+        "end": 7.5,
+        "text": "순위표 공개",
+        "y": 1350
+      },
+      {
+        "start": 8.6,
+        "end": 13.0,
+        "text": "슬라이드 속도 1.4% 증가",
+        "y": 560
+      },
+      {
+        "start": 9.6,
+        "end": 13.0,
+        "text": "자신감은 그대로였는데도",
+        "y": 660
+      }
+    ],
+    "counter": {
+      "start": 13.1,
+      "end": 17.5,
+      "label": "스트라이크 비율",
+      "from": 46,
+      "to": 31,
+      "unit": "%",
+      "note": "편할 때 46% → 압박 속 31%\n(통계 검정 전 수치)"
+    },
+    "summary": {
+      "start": 17.5,
+      "result": "압박을 받으면\n마음보다 *몸이 먼저*\n서두릅니다",
+      "tips_label": "시사점",
+      "tips": [
+        "4스텝→릴리스까지 *평소 리듬* 유지",
+        "자신 있어도 *몸은 서두를 수* 있다",
+        "일정한 동작이 *일정한 점수*를 만든다"
+      ],
+      "source": "Lee & Chong (2018), ISBS Conference"
+    }
+  },
   "source": {
     "short": "Lee & Chong (2018), ISBS",
     "citation": "Lee, M.J.C. & Chong, D. (2018). Differences in the mechanics of elite ten-pin bowlers when performing under varying levels of anxieties. 36th ISBS Conference, Auckland.",
