@@ -21,7 +21,20 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+
+      - name: Fix upload layout (one-time)
+        run: |
+          if [ -d enbowl-science ]; then
+            git config user.name "enbowl-bot"
+            git config user.email "actions@users.noreply.github.com"
+            cp -r enbowl-science/. .
+            git rm -r -q enbowl-science
+            git add -A
+            git commit -m "파일을 저장소 루트로 이동 [skip ci]"
+            git push
+          fi
+          echo "GITHUB_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
       - name: Publish unpublished posts
         env:
