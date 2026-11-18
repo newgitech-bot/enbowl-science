@@ -5,7 +5,7 @@
 """
 import base64, json, os, subprocess, sys, wave
 from pathlib import Path
-sys.path.append("third_party/Matcha-TTS")
+sys.path.insert(0, os.getcwd()); sys.path.append(os.path.join(os.getcwd(), "third_party/Matcha-TTS"))
 import torchaudio
 from cosyvoice.cli.cosyvoice import CosyVoice2
 from cosyvoice.utils.file_utils import load_wav
