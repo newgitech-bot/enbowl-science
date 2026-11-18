@@ -6,7 +6,7 @@
 import base64, json, os, subprocess, sys, wave
 from pathlib import Path
 sys.path.insert(0, os.getcwd()); sys.path.append(os.path.join(os.getcwd(), "third_party/Matcha-TTS"))
-import torchaudio
+import soundfile as sf
 from cosyvoice.cli.cosyvoice import CosyVoice2
 
 post = Path(sys.argv[1]); outname = sys.argv[2] if len(sys.argv) > 2 else "narration_clone"
@@ -29,7 +29,7 @@ for i, line in enumerate(spec["lines"]):
     f = out / f"{i:02d}_{line['scene']}.wav"
     chunks = [r["tts_speech"] for r in cv.inference_zero_shot(line["text"], prompt_text, prompt, stream=False)]
     import torch
-    torchaudio.save(str(f), torch.cat(chunks, dim=1), cv.sample_rate)
+    sf.write(str(f), torch.cat(chunks, dim=1).squeeze(0).cpu().numpy(), cv.sample_rate, subtype="PCM_16")
     with wave.open(str(f)) as w:
         d = w.getnframes() / w.getframerate()
     info.append({**line, "file": f.name, "duration": round(d, 3)})
