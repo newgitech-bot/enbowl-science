@@ -1,0 +1,47 @@
+name: Publish to Instagram
+
+on:
+  push:
+    branches: [main]
+    paths: ["posts/**"]
+  workflow_dispatch:
+    inputs:
+      post:
+        description: "게시할 폴더 (예: posts/EP03). 비우면 미게시 폴더 전부"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish unpublished posts
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+        run: |
+          if [ -n "${{ github.event.inputs.post }}" ]; then
+            dirs="${{ github.event.inputs.post }}"
+          else
+            dirs=$(for d in posts/EP*/; do d=${d%/}; [ -f "$d/caption.txt" ] && [ ! -f "$d/published.json" ] && echo "$d"; done | sort)
+          fi
+          for d in $dirs; do
+            echo "::group::$d"
+            python scripts/publish.py "$d"
+            echo "::endgroup::"
+          done
+
+      - name: Record published state
+        run: |
+          git config user.name "enbowl-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add posts/*/published.json 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "게시 기록 [skip ci]" && git push
