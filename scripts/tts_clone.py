@@ -9,11 +9,22 @@ sys.path.insert(0, os.getcwd()); sys.path.append(os.path.join(os.getcwd(), "thir
 import soundfile as sf
 from cosyvoice.cli.cosyvoice import CosyVoice2
 
+REF_TEXT = ("안녕하세요, 앤볼입니다. 볼링을 오래 치다 보면, 연습 때는 잘 되던 투구가 중요한 순간에만 흔들릴 때가 있죠? "
+            "저도 선수 생활을 하면서 그런 순간을 정말 많이 겪었습니다. 그래서 오늘은 그 이유를 실제 연구 결과로 알아보려고 해요. "
+            "세계 랭커 열한 명이 참여한 실험인데요, 결과를 보면 생각보다 간단한 데서 답을 찾을 수 있습니다. "
+            "끝까지 보시고, 다음 게임에 꼭 적용해 보세요!")
 post = Path(sys.argv[1]); outname = sys.argv[2] if len(sys.argv) > 2 else "narration_clone"
-Path("/tmp/ref.opus").write_bytes(base64.b64decode(os.environ["VOICE_REF_B64"]))
-subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", "/tmp/ref.opus", "-ac", "1", "-ar", "16000", "/tmp/ref.wav"], check=True)
+# 참고 음성: 저장소의 voice/ref.flac.gpg 를 Secrets 의 VOICE_KEY 로 복호화 (없으면 예전 VOICE_REF_B64)
+enc = Path(__file__).resolve().parent.parent / "voice" / "ref.flac.gpg"
+if os.environ.get("VOICE_KEY") and enc.exists():
+    subprocess.run(["gpg", "--batch", "--yes", "--pinentry-mode", "loopback", "--passphrase", os.environ["VOICE_KEY"],
+                    "-o", "/tmp/ref.flac", "-d", str(enc)], check=True)
+    src = "/tmp/ref.flac"
+else:
+    Path("/tmp/ref.opus").write_bytes(base64.b64decode(os.environ["VOICE_REF_B64"])); src = "/tmp/ref.opus"
+subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", src, "-ac", "1", "-ar", "24000", "/tmp/ref.wav"], check=True)
 
-prompt_text = os.environ.get("VOICE_REF_TEXT", "").strip() or "안녕하세요, 앤볼입니다. 오늘은 압박감이 볼링 투구에 어떤 영향을 주는지, 실제 연구 결과로 알아보겠습니다."
+prompt_text = os.environ.get("VOICE_REF_TEXT", "").strip() or REF_TEXT
 if not prompt_text:
     from faster_whisper import WhisperModel
     segs, _ = WhisperModel("small", device="cpu", compute_type="int8").transcribe("/tmp/ref.wav", language="ko")

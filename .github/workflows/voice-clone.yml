@@ -22,8 +22,8 @@ jobs:
       - name: Check secret
         id: key
         env:
-          K: ${{ secrets.VOICE_REF_B64 }}
-        run: if [ -n "$K" ]; then echo "ok=1" >> $GITHUB_OUTPUT; else echo "VOICE_REF_B64 없음, 건너뜀"; fi
+          K: ${{ secrets.VOICE_KEY }}
+        run: if [ -n "$K" ]; then echo "ok=1" >> $GITHUB_OUTPUT; else echo "VOICE_KEY 없음, 건너뜀"; fi
       - name: Install CosyVoice
         if: steps.key.outputs.ok == '1'
         run: |
@@ -39,6 +39,7 @@ jobs:
       - name: Generate
         if: steps.key.outputs.ok == '1'
         env:
+          VOICE_KEY: ${{ secrets.VOICE_KEY }}
           VOICE_REF_B64: ${{ secrets.VOICE_REF_B64 }}
           VOICE_REF_TEXT: ${{ vars.VOICE_REF_TEXT }}
         run: |
