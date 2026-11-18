@@ -38,6 +38,7 @@ jobs:
             d=$(dirname "$f")
             [ -f "$d/narration/durations.json" ] && [ "$d/narration/durations.json" -nt "$f" ] && continue
             echo "== $d"
+            if grep -q '"voice": "clone' "$f"; then echo "목소리 복제는 Voice clone 워크플로에서 생성"; continue; fi
             if grep -q '"voice": "google:' "$f"; then python scripts/tts_google.py "$d"; else python scripts/tts.py "$d"; fi
           done
       - name: Commit audio
