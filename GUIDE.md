@@ -7,6 +7,7 @@
 |---|---|---|---|
 | 화 19:00 | 카드뉴스 캐러셀 8~10장, 1080x1350 | 직전 토요일 밤 | `posts/2026-11-24-EP04` |
 | 금 19:00 | 릴스 40~60초, 1080x1920 | 직전 화요일 밤 | `posts/2026-11-27-EP05` |
+| 일 19:00 | BOWLING SUNDAY 단편 이미지 1장, 1080x1350 | 직전 목요일 밤 | `posts/2026-11-22-SUN01` |
 
 주제는 Claude 가 정한다. 준서님에게 주제를 묻지 않는다.
 
@@ -79,13 +80,26 @@ BOWLING SCIENCE EP.NN | 논문 리뷰   (또는 연구 리뷰 / 볼링 뉴스)
 5. 합성: `content.json` 의 overlay(자막 `*강조*`, 칩, 게이지, summary_card) → `python scripts/character/compose.py <spec> <frames> reel.mp4 audio.wav`.
 6. `cover.jpg` (릴스 썸네일) 도 만든다.
 
+## 5-1. BOWLING SUNDAY (일, 단편 이미지 1장)
+- 폴더 `posts/YYYY-MM-DD-SUNNN` (SUN 번호는 직전 +1, EP 번호와 별개). `content.json` 의 format 은 `"image"`, 결과물은 `image.jpg`.
+- 유형을 매주 돌아가며 쓴다. 직전 SUN 과 같은 유형은 피한다. 그 주에 큰 볼링 뉴스가 있으면 뉴스 우선.
+  1. 일러스트 한 컷 (볼링장 분위기 감성 그림 + 한 줄)
+  2. 상식 한 컷 (숫자 하나로 끝나는 사실, 출처 확인)
+  3. 공감 밈 (볼러라면 아는 상황)
+  4. 한마디 (실존 인물 명언은 원 출처를 확인한 것만. 확인 못 하면 앤볼의 문장으로. 지어낸 인용 금지)
+  5. 이번 주 볼링 뉴스 한 컷 (PBA·USBC·World Bowling·대한볼링협회, 최근 1주, 공식 출처)
+  6. 용어 한 컷 (포켓, 브루클린, 캐리다운 등)
+- 그림은 GPT(그림 안에 글자 없음), 한글 문구는 코드로 얹는다. 매주 캐릭터·화풍 자유. 그림 최대 3장.
+- 캡션: 첫 줄 `BOWLING SUNDAY | <유형>`, 3~6줄, 댓글 유도 한 줄 가능, 사실이 들어가면 출처. 해시태그 6~10개.
+- 참고 코드: `scripts/cards/sun.py`.
+
 ## 6. 검수
 - 결과물을 직접 열어 본다. 카드는 전부, 릴스는 장면마다 프레임을 뽑아서.
 - 글자 넘침, 한 글자 줄바꿈, 겹침, 잘림, 오탈자, 숫자 불일치(캡션·카드·영상 모두 같은 숫자인지)를 확인한다.
 - `python scripts/publish.py --all --dry-run` 통과.
 
 ## 7. PR
-- 브랜치 `post/epNN`, 제목 `EP.NN (화 캐러셀) <훅>` / `EP.NN (금 릴스) <훅>`. main 에 직접 push 하지 않는다.
+- 브랜치 `post/epNN` (일요일은 `post/sunNN`), 제목 `EP.NN (화 캐러셀) <훅>` / `EP.NN (금 릴스) <훅>`. main 에 직접 push 하지 않는다.
 - PR 은 `gh api` REST 로 만든다 (`gh pr create` 의 GraphQL 은 막혀 있음).
 - 본문: 게시 일시, 미리보기 이미지(raw.githubusercontent 링크), 캡션 전문, 출처 링크, 사실 확인 메모, 이번 캐릭터·색 조합, 사용한 그림 수.
 - `sources.md` 에 한 줄 추가. 머지는 준서님이 한다.

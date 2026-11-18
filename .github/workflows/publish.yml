@@ -1,10 +1,10 @@
 name: Publish to Instagram
 
-# 화·금 19:00 (KST) 에 publish_date 가 된 미게시 콘텐츠를 게시
+# 화·금·일 19:00 (KST) 에 publish_date 가 된 미게시 콘텐츠를 게시
 # PR 머지만으로는 게시되지 않음. 바로 올리려면 Run workflow 에 폴더를 입력.
 on:
   schedule:
-    - cron: "0 10 * * 2,5"
+    - cron: "0 10 * * 0,2,5"
   workflow_dispatch:
     inputs:
       post:
