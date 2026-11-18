@@ -1,0 +1,11 @@
+{
+  "character": "a chubby gray tabby cat bowler wearing a purple bowling shirt",
+  "items": [
+    {
+      "out": "assets/gpt/sun01/main.png",
+      "prompt": "Funny relatable bowling meme scene. The cat stands at the foul line on the left, holding a bowling ball close to its chest, sweating nervously with big wide eyes and a wobbly mouth. Far down a glossy light-wood bowling lane, a single white bowling pin with two red stripes stands all alone at the far right corner of the pin deck, and that lone pin has a tiny smug grin. The lane perspective makes the lone pin look very far away. Bright, clean, simple bowling alley background with soft pastel colors. Square composition, character in the lower left, lone pin clearly visible on the right.",
+      "size": "1024x1024",
+      "quality": "medium"
+    }
+  ]
+}

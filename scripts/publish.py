@@ -2,6 +2,7 @@
 """posts/<폴더> 를 인스타그램에 게시한다. content.json 의 format 에 따라
   carousel: cards/*.jpg 를 캐러셀로 (이미지는 GitHub raw URL 로 전달)
   reel:     reel.mp4 를 릴스로 (resumable 업로드로 파일을 직접 전송)
+  image:    image.jpg 1장을 단일 이미지 게시물로 (BOWLING SUNDAY)
 
 환경변수: IG_TOKEN, IG_USER_ID (Secrets), GITHUB_REPOSITORY
 선택: IMAGE_REF (raw URL 에 쓸 커밋, 기본 GITHUB_SHA 또는 main),
@@ -71,6 +72,9 @@ def load(post_dir):
         cards = sorted((post_dir / "cards").glob("*.jpg"))
         if not 2 <= len(cards) <= 10:
             errors.append(f"카드 수는 2~10장이어야 합니다 (현재 {len(cards)})")
+    elif fmt == "image":
+        if not (post_dir / "image.jpg").exists():
+            errors.append("image.jpg 가 없습니다")
     elif fmt == "reel":
         video = post_dir / "reel.mp4"
         if not video.exists():
@@ -105,6 +109,19 @@ def publish_carousel(post_dir, caption, dry_run):
     return parent
 
 
+def publish_image(post_dir, caption, dry_run):
+    repo = os.environ.get("GITHUB_REPOSITORY", "newgitech-bot/enbowl-science")
+    ref = os.environ.get("IMAGE_REF") or os.environ.get("GITHUB_SHA") or "main"
+    url = f"https://raw.githubusercontent.com/{repo}/{ref}/{post_dir.as_posix()}/image.jpg"
+    if dry_run:
+        print("이미지 1장 검사 통과")
+        return None
+    ig = os.environ["IG_USER_ID"]
+    cid = call("POST", f"{ig}/media", image_url=url, caption=caption)["id"]
+    wait_ready(cid, "이미지")
+    return cid
+
+
 def publish_reel(post_dir, caption, c, dry_run):
     video = post_dir / "reel.mp4"
     if dry_run:
@@ -133,6 +150,8 @@ def publish(post_dir, dry_run=False):
     c, fmt, caption = load(post_dir)
     if fmt == "carousel":
         creation = publish_carousel(post_dir, caption, dry_run)
+    elif fmt == "image":
+        creation = publish_image(post_dir, caption, dry_run)
     else:
         creation = publish_reel(post_dir, caption, c, dry_run)
     if dry_run:

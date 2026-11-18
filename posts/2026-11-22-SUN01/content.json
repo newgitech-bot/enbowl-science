@@ -1,0 +1,13 @@
+{
+  "format": "image",
+  "series": "BOWLING SUNDAY",
+  "sun": {
+    "no": 1,
+    "type": "공감 한 컷",
+    "headline": "*10번 핀* 하나 남았을 때",
+    "sub": "분명 하나인데, 왜 이렇게 멀어 보일까요",
+    "art": "assets/gpt/sun01/main.png",
+    "palette": {"main": [96, 62, 170], "mark": [255, 214, 92]}
+  },
+  "publish_date": "2026-11-22"
+}
