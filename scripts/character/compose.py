@@ -6,6 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from brand import font, ORANGE, WHITE, DARK, PEACH
 
 FPS = 24; W, H = 1080, 1920; M = 70
+AUDIO = sys.argv[4] if len(sys.argv) > 4 else None
 
 def ease(x):
     x = max(0, min(1, x)); return 1 - (1 - x) ** 3
@@ -79,6 +80,27 @@ def rich_draw(d, xy, text, f, lh, base=(22, 22, 24)):
         y += lh
     return y
 
+def gauges(fr, g, t, fade):
+    lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+    x0, x1, y0 = 60, W - 130, 1060
+    rows = g["rows"]; h = 110 + len(rows) * 104
+    d.rounded_rectangle((x0, y0, x1, y0 + h), radius=36, fill=(255, 255, 255, 250))
+    d.text((x0 + 44, y0 + 30), g["title"], font=font("Bold", 32), fill=(140, 140, 146))
+    for n, r in enumerate(rows):
+        y = y0 + 90 + n * 104
+        k = ease((t - 0.3 - n * 0.35) / 0.8)
+        d.text((x0 + 44, y + 10), r["label"], font=font("Bold", 44), fill=(22, 22, 24))
+        bx0, bx1 = x0 + 290, x1 - 190
+        d.rounded_rectangle((bx0, y + 20, bx1, y + 52), radius=16, fill=(236, 236, 232))
+        v = r["from"] + (r["to"] - r["from"]) * k
+        col = tuple(r.get("color", ORANGE))
+        d.rounded_rectangle((bx0, y + 20, bx0 + int((bx1 - bx0) * v), y + 52), radius=16, fill=col)
+        if k > 0.6:
+            d.text((bx1 + 22, y + 8), r["tag"], font=font("Black", 44), fill=col)
+    if g.get("note"):
+        d.text((x0 + 44, y0 + h - 2), g["note"], font=font("Regular", 28), fill=(255, 255, 255), stroke_width=4, stroke_fill=(20, 20, 24))
+    paste(fr, lay, 0, 0, min(fade, ease(t / 0.3)), rise=0)
+
 def summary_card(fr, sm, t):
     k = ease(t / 0.4)
     if k <= 0: return
@@ -103,27 +125,29 @@ def summary_card(fr, sm, t):
         paste(fr, tl, 0, y + n * 120, kk, rise=30)
     if t > 1.0:
         sd = ImageDraw.Draw(fr)
+        if sm.get("note"):
+            sd.text((px, 1356), sm["note"], font=font("Regular", 28), fill=(150, 150, 156))
         sd.text((px, 1400), "출처  " + sm["source"], font=font("Regular", 28), fill=(150, 150, 156))
 
 def render(spec, frames_dir, out):
     caps = [(c["start"], c["end"], caption_box(c["text"])) for c in spec["captions"]]
     chips = [(c["start"], c["end"], chip(c["text"]), c["y"]) for c in spec.get("chips", [])]
     cnt = spec.get("counter")
-    n = len(list(Path(frames_dir).glob("*.png")))
+    n = spec["frames"]
     cmd = ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
-           "-r", str(FPS), "-i", "-", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo", "-shortest",
+           "-r", str(FPS), "-i", "-", "-i", AUDIO, "-shortest",
            "-c:v", "libx264", "-preset", "veryfast", "-crf", "19", "-pix_fmt", "yuv420p",
            "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", out]
     p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     for i in range(n):
         t = i / FPS
         fr = BG.copy()
-        fr.alpha_composite(Image.open(f"{frames_dir}/{i:04d}.png").convert("RGBA"))
+        src = Path(f"{frames_dir}/{i:04d}.png")
+        if not src.exists(): src = Path(f"{frames_dir}/{i-1:04d}.png")
+        fr.alpha_composite(Image.open(src).convert("RGBA"))
         d = ImageDraw.Draw(fr)
         # 상단 라벨
         summ = spec["summary"]
-        if t < summ["start"]:
-            outline_text(d, (M, 210), "BOWLING SCIENCE", font("Black", 34), ORANGE, 6)
         for s, e, im in caps:
             if s <= t < e:
                 k = min(ease((t - s) / 0.25), ease((e - t) / 0.2))
@@ -132,6 +156,14 @@ def render(spec, frames_dir, out):
             if s <= t < e:
                 k = min(ease((t - s) / 0.3), ease((e - t) / 0.2))
                 paste(fr, im, M, y, k)
+        for lb in spec.get("labels", []):
+            if lb["start"] <= t < lb["end"]:
+                k = min(ease((t - lb["start"]) / 0.3), ease((lb["end"] - t) / 0.2))
+                im = chip(lb["text"], 50, tuple(lb["color"]))
+                paste(fr, im, lb["x"] - im.width / 2, lb["y"], k, rise=20)
+        g = spec.get("gauges")
+        if g and g["start"] <= t < g["end"]:
+            gauges(fr, g, t - g["start"], min(1, ease((g["end"] - t) / 0.2)))
         if cnt and cnt["start"] <= t < cnt["end"]:
             k = ease((t - cnt["start"] - 0.3) / 1.6)
             v = cnt["from"] + (cnt["to"] - cnt["from"]) * k

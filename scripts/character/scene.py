@@ -154,9 +154,9 @@ def pins(length=18.3):
             out.append(pin(f"pin{len(out)}", (x*sp, length-0.86+r*sp*0.866, 0)))
     return out
 
-def ball(name="ball", loc=(0,0,0), rgb=(255,114,0)):
+def ball(name="ball", loc=(0,0,0), rgb=(255,114,0), r=0.109):
     m = mat(name, rgb, 0.15)
-    b = sphere(name, loc, (0.109,0.109,0.109), m, seg=48)
+    b = sphere(name, loc, (r,r,r), m, seg=48)
     for (x,z) in ((-0.03,0.06),(0.03,0.06),(0,0.0)):
         sphere(name+"_hole", (0,0,0), (0.018,0.006,0.018), mat("hole",(10,10,10)), parent=b).location=(x/0.109, -1.0, z/0.109)
     return b
