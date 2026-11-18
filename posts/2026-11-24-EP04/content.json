@@ -91,5 +91,7 @@
     "citation": "Seiferheld B.E. et al. (2023). Full-Body Kinematics and Vertical Ground Reaction Forces in Elite Ten-Pin Bowling: A Field Study. Sensors, 23(19), 8284.",
     "url": "https://doi.org/10.3390/s23198284"
   },
-  "caption": "BOWLING SCIENCE EP.04 | 논문 리뷰\n국가대표도 72구째엔 볼이 느려집니다.\n\n덴마크 국가대표 6명이 72구를 던지는 동안 몸 17곳에 센서를 달고 측정한 연구입니다.\n세트가 지날수록 릴리스 속도는 약 3.6% 줄었지만, 점수는 거의 그대로였습니다.\n비결은 손이었습니다. 후반으로 갈수록 손목과 팔꿈치를 더 굽히고, 릴리스 때 손목 회전을 늘려 레인 변화에 맞췄습니다.\n\n후반 게임에서 볼 반응이 달라진다면, 내 손목은 어떻게 쓰고 있는지 한번 확인해 보세요.\n\n출처: Seiferheld et al., Sensors 2023, doi.org/10.3390/s23198284\n\n#볼링 #볼링사이언스 #볼링논문 #스포츠과학 #볼링레슨 #볼링선수 #앤볼 #Enbowl #EnjoyBowling"
+  "caption": "BOWLING SCIENCE EP.04 | 논문 리뷰\n국가대표도 72구째엔 볼이 느려질까요?\n\n덴마크 남자 국가대표 6명이 실제 볼링장에서 72구를 던지는 동안, 온몸에 센서를 달고 측정한 연구입니다.\n\n세트가 지날수록 릴리스 속도는 8.37에서 8.07 m/s로 약 3.6% 줄었습니다.\n그런데 핀 결과는 거의 그대로였습니다.\n달라진 건 손이었습니다. 릴리스 직전 손목과 팔꿈치를 더 굽히고, 릴리스 때 손목을 더 돌렸습니다.\n\n연구진은 레인 오일이 변하면서 선수들이 속도 대신 회전으로 볼 반응을 맞춘 것으로 해석했습니다.\n\n후반 게임에서 볼 반응이 달라진다면, 내 손목은 어떻게 쓰고 있는지 먼저 확인해 보세요.\n저장해 두고 다음 게임에 활용해 보세요.\n\n출처: Seiferheld et al. (2023), Sensors 23(19), 8284\n\n#볼링 #볼링사이언스 #볼링논문 #스포츠과학 #볼링레슨 #볼링선수 #앤볼 #Enbowl #EnjoyBowling",
+  "style": "card-v2",
+  "note": "카드 이미지는 scripts/cards (card2 스타일)로 생성. 10장."
 }
