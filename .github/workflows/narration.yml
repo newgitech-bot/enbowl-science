@@ -1,4 +1,4 @@
-name: Narration (MeloTTS)
+name: Narration
 
 # narration.json 이 바뀌면 한국어 나레이션 음성을 만들어 같은 브랜치에 커밋
 on:
@@ -24,16 +24,21 @@ jobs:
             ~/.cache/pip
             ~/.cache/huggingface
           key: melotts-v1
-      - name: Install MeloTTS
+      - name: Install
         run: |
-          pip install git+https://github.com/myshell-ai/MeloTTS.git
-          python -m unidic download
+          pip install google-cloud-texttospeech
+          if grep -l '"voice": "melo' posts/*/narration.json >/dev/null 2>&1; then
+            pip install git+https://github.com/myshell-ai/MeloTTS.git && python -m unidic download
+          fi
       - name: Generate narration
+        env:
+          GCP_TTS_KEY: ${{ secrets.GCP_TTS_KEY }}
         run: |
           for f in $(git diff --name-only HEAD~1 HEAD -- 'posts/**/narration.json' 2>/dev/null; ls posts/*/narration.json); do
             d=$(dirname "$f")
             [ -f "$d/narration/durations.json" ] && [ "$d/narration/durations.json" -nt "$f" ] && continue
-            echo "== $d"; python scripts/tts.py "$d"
+            echo "== $d"
+            if grep -q '"voice": "google:' "$f"; then python scripts/tts_google.py "$d"; else python scripts/tts.py "$d"; fi
           done
       - name: Commit audio
         run: |
