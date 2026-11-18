@@ -2,10 +2,13 @@
   "items": [
     {
       "out": "assets/gpt/test_cover.png",
-      "refs": ["assets/character/ref_think.png"],
+      "refs": [
+        "assets/character/ref_think.png"
+      ],
       "prompt": "New scene: the boy stands next to a giant bowling pin about as tall as him, holding a blue bowling ball with both hands at his chest, looking up at the pin with a curious, excited face. A small magnifying glass floats beside the pin with a few tiny sparkles. Plain white background, soft gray shadow under his feet. Place the character and pin in the lower two-thirds of the frame and leave the top third empty for a title.",
       "size": "1024x1024",
       "quality": "medium"
     }
-  ]
+  ],
+  "character": "the boy from the reference image (black bowl-cut hair, rosy cheeks, orange sweater, navy pants, white sneakers)"
 }
