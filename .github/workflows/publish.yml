@@ -1,10 +1,11 @@
 name: Publish to Instagram
 
-# 화·금·일 19:00 (KST) 에 publish_date 가 된 미게시 콘텐츠를 게시
+# 매일 19:03~22:33 (KST) 사이 30분마다 확인해서, publish_date 가 된 미게시 콘텐츠를 게시
+# (GitHub 예약 실행은 가끔 빠지거나 늦어지므로 여러 번 확인한다. 당일 게시물은 19:00 이후에만 올린다)
 # PR 머지만으로는 게시되지 않음. 바로 올리려면 Run workflow 에 폴더를 입력.
 on:
   schedule:
-    - cron: "0 10 * * 0,2,5"
+    - cron: "3,33 10-13 * * *"
   workflow_dispatch:
     inputs:
       post:
@@ -44,5 +45,5 @@ jobs:
           git add posts/*/published.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "게시 기록 [skip ci]"
-            git push
+            for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done
           fi

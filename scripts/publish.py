@@ -11,7 +11,7 @@
 사용법:
   python scripts/publish.py posts/2026-11-24-EP04            게시
   python scripts/publish.py posts/2026-11-24-EP04 --dry-run  검사만
-  python scripts/publish.py --due                             publish_date 가 오늘(KST) 이하인 미게시 폴더 전부
+  python scripts/publish.py --due                             publish_date 가 지난(당일은 19시 이후) 미게시 폴더 전부
 """
 import json
 import os
@@ -166,15 +166,19 @@ def publish(post_dir, dry_run=False):
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+PUBLISH_HOUR = 19  # 당일 게시물은 KST 19시 이후에만
+
+
 def due_posts():
-    today = datetime.now(KST).date().isoformat()
+    now = datetime.now(KST)
+    today = now.date().isoformat()
     out = []
     for d in sorted(Path("posts").iterdir()):
         cj = d / "content.json"
         if not cj.exists() or (d / "published.json").exists():
             continue
         date = json.loads(cj.read_text(encoding="utf-8")).get("publish_date", "")
-        if date and date <= today:
+        if date and (date < today or (date == today and now.hour >= PUBLISH_HOUR)):
             out.append(d)
     return out
 
