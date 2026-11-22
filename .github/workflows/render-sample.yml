@@ -1,0 +1,67 @@
+name: Render reel v2 sample
+
+# 릴스 v2 품질 샘플(Cycles + 물리 핀)을 20대로 나눠 렌더하고 합쳐서 커밋
+on:
+  push:
+    branches-ignore: [main]
+    paths: ["scripts/character/v2/**", ".github/workflows/render-sample.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        part: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install Blender (bpy)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libxrender1 libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 >/dev/null
+          pip install -q bpy==5.3.0 numpy
+      - name: Render my frames
+        run: |
+          FR=$(python -c "
+          n=[*range(0,207,2), *range(208,331)]
+          print(','.join(str(f) for f in n[${{ matrix.part }}::20]))")
+          echo "frames: $FR"
+          cd scripts/character/v2 && python sample.py ../../../frames "$FR"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frames-${{ matrix.part }}
+          path: frames/*.png
+          retention-days: 2
+
+  compose:
+    needs: render
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: sudo apt-get install -y -qq ffmpeg >/dev/null && pip install -q numpy
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: frames-*
+          path: frames
+          merge-multiple: true
+      - run: |
+          mkdir -p samples
+          python scripts/character/v2/compose_sample.py frames samples/reel_v2_sample.mp4
+          cp frames/0100.png samples/reel_v2_still_a.png
+          cp frames/0170.png samples/reel_v2_still_b.png
+          cp frames/0228.png samples/reel_v2_still_c.png
+          git config user.name "enbowl-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add samples/reel_v2_*
+          git commit -m "릴스 v2 샘플 렌더 [skip ci]" && git pull --rebase -q && git push
