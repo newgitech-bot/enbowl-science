@@ -1,0 +1,50 @@
+[
+  {
+    "scene": "hook",
+    "text": "중요한 프레임만 되면, 공이 꼭 이상하게 가죠? 저만 그런 거 아니죠?",
+    "file": "00_hook.wav",
+    "duration": 4.24
+  },
+  {
+    "scene": "intro",
+    "text": "그래서 세계 랭커 열한 명을 모아서, 진짜로 실험해 봤어요!",
+    "file": "01_intro.wav",
+    "duration": 3.88
+  },
+  {
+    "scene": "compare",
+    "text": "같은 선수가 두 번 던졌어요. 한 번은 편하게! 한 번은 목표 점수에 벌칙 예고, 순위표까지 붙여서, 제대로 긴장되게요.",
+    "file": "02_compare.wav",
+    "duration": 7.24
+  },
+  {
+    "scene": "mind",
+    "text": "압박을 받으니까 걱정이랑 긴장은 확 올라갔어요. 그런데 자신감은요? 그대로였어요.",
+    "file": "03_mind.wav",
+    "duration": 5.96
+  },
+  {
+    "scene": "slowmo",
+    "text": "문제는 몸이었어요. 슬라이드 발이 빨라지고, 어깨 스윙도 빨라지는 경향을 보였거든요. 마음보다 몸이 먼저 서두른 거죠!",
+    "file": "04_slowmo.wav",
+    "duration": 7.96
+  },
+  {
+    "scene": "pins",
+    "text": "스트라이크 비율은요, 편할 때 사십육 퍼센트에서, 압박 속에선 삼십일 퍼센트로 뚝 떨어졌어요.",
+    "file": "05_pins.wav",
+    "duration": 6.64
+  },
+  {
+    "scene": "speed",
+    "text": "재밌는 건 볼 속도예요. 스트라이크든 아니든 거의 똑같았어요. 힘이 아니라, 리듬 문제였던 거예요.",
+    "file": "06_speed.wav",
+    "duration": 5.68
+  },
+  {
+    "scene": "summary",
+    "text": "그러니까 중요한 프레임일수록, 사 스텝부터 릴리스까지 평소 리듬 그대로! 이게 이 연구의 핵심이에요.",
+    "file": "07_summary.wav",
+    "duration": 6.08
+  }
+]
