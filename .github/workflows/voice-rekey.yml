@@ -1,0 +1,36 @@
+name: Voice key setup (one-time)
+
+# 참고 음성을 새로 바꿀 때 Secrets 를 건드리지 않도록, 공개키 방식으로 바꾼다.
+# 1) 여기서 키 쌍을 만들고 비밀키는 VOICE_KEY 로 다시 암호화해 voice/key.asc.gpg 로 둔다.
+# 2) 공개키 voice/pub.asc 로 누구나 새 참고 음성을 암호화할 수 있고, 푸는 건 VOICE_KEY 가 있는 Actions 뿐이다.
+on:
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/voice-rekey.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  rekey:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Make key pair
+        env:
+          VOICE_KEY: ${{ secrets.VOICE_KEY }}
+        run: |
+          if [ -f voice/pub.asc ]; then echo "이미 있음"; exit 0; fi
+          [ -n "$VOICE_KEY" ] || { echo "VOICE_KEY 없음"; exit 1; }
+          export GNUPGHOME=$(mktemp -d)
+          gpg --batch --passphrase '' --quick-gen-key "enbowl-voice" ed25519 sign never
+          FPR=$(gpg --list-keys --with-colons enbowl-voice | awk -F: '/^fpr/{print $10; exit}')
+          gpg --batch --passphrase '' --quick-add-key "$FPR" cv25519 encr never
+          gpg --armor --export enbowl-voice > voice/pub.asc
+          gpg --armor --export-secret-keys enbowl-voice | gpg --batch --yes --pinentry-mode loopback \
+            --passphrase "$VOICE_KEY" --symmetric --cipher-algo AES256 -o voice/key.asc.gpg
+          git config user.name "enbowl-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add voice/pub.asc voice/key.asc.gpg
+          git commit -m "목소리 참고 음성용 공개키 추가 [skip ci]"
+          for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done

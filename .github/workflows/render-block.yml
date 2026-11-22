@@ -1,0 +1,91 @@
+name: Render block reel
+
+# posts/<폴더>/render.json ({"anim": "anim_xxx.py"}) 을 push 하면, 그 폴더의 timeline.json 대로
+# 블록 캐릭터 릴스를 20대로 나눠 렌더하고 합성해서 같은 브랜치에 커밋한다.
+on:
+  push:
+    branches-ignore: [main]
+    paths: ["posts/**/render.json"]
+
+permissions:
+  contents: write
+
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    outputs:
+      post: ${{ steps.f.outputs.post }}
+      anim: ${{ steps.f.outputs.anim }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+      - id: f
+        run: |
+          R=$(git diff --name-only HEAD~1 HEAD | grep 'render.json' | head -1)
+          echo "post=$(dirname $R)" >> $GITHUB_OUTPUT
+          echo "anim=$(python3 -c "import json;print(json.load(open('$R'))['anim'])")" >> $GITHUB_OUTPUT
+
+  render:
+    needs: find
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 16        # 무료 계정 동시 실행 20개 중 4개는 게시·음성 작업용으로 남김
+      matrix:
+        part: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install Blender (bpy)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libxrender1 libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 >/dev/null
+          pip install -q bpy==5.3.0 numpy pillow
+      - name: Render my frames
+        env:
+          POST: ${{ needs.find.outputs.post }}
+          SPP: "20"
+        run: |
+          FR=$(python -c "
+          import json
+          tl=json.load(open('$POST/timeline.json'))
+          n=round(tl['total']*24)
+          s0=round([s for s in tl['shots'] if s['name']=='summary'][0]['start']*24)
+          fr=[f for f in range(n) if f<s0 or (f-s0)%2==0]
+          print(','.join(map(str,fr[${{ matrix.part }}::20])))")
+          python scripts/character/block/${{ needs.find.outputs.anim }} $POST/timeline.json frames "$FR"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frames-${{ matrix.part }}
+          path: frames/*.png
+          retention-days: 2
+
+  compose:
+    needs: [find, render]
+    runs-on: ubuntu-latest
+    env:
+      POST: ${{ needs.find.outputs.post }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: sudo apt-get install -y -qq ffmpeg >/dev/null && pip install -q numpy pillow
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: frames-*
+          path: frames
+          merge-multiple: true
+      - run: |
+          python scripts/character/sfx.py $POST/audio.json /tmp/audio.wav
+          python -c "
+          import json; c=json.load(open('$POST/content.json')); json.dump(c['overlay'], open('/tmp/spec.json','w'), ensure_ascii=False)"
+          python scripts/character/compose.py /tmp/spec.json frames $POST/reel.mp4 /tmp/audio.wav
+          git config user.name "enbowl-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add $POST/reel.mp4 $POST/cover.jpg
+          git commit -m "블록 릴스 렌더 [skip ci]" && git pull --rebase -q && git push

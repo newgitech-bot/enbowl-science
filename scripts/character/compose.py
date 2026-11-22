@@ -39,6 +39,25 @@ def caption_box(text, size=74):
         y += lh
     return img
 
+def caption_stroke(text, size=86):
+    """레퍼런스풍 자막: 흰 글자 + 진한 남색 외곽선, 강조는 노랑 (배경 상자 없음)"""
+    f = font("Black", size)
+    tmp = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+    lines = rich_lines(text)
+    sw = int(size * 0.13)
+    lw = [sum(tmp.textlength(p, font=f) for p, _ in l) for l in lines]
+    lh = int(size * 1.25)
+    img = Image.new("RGBA", (int(max(lw)) + sw * 2 + 20, lh * len(lines) + sw * 2 + 10), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    y = sw + 2
+    for l, w in zip(lines, lw):
+        x = (img.width - w) / 2
+        for p, hl in l:
+            d.text((x, y), p, font=f, fill=(255, 214, 60) if hl else WHITE, stroke_width=sw, stroke_fill=(32, 30, 58))
+            x += d.textlength(p, font=f)
+        y += lh
+    return img
+
 def chip(text, size=46, bg=ORANGE, fg=WHITE):
     f = font("Bold", size)
     tw = ImageDraw.Draw(Image.new("RGB", (1, 1))).textlength(text, font=f)
@@ -130,7 +149,8 @@ def summary_card(fr, sm, t):
         sd.text((px, 1400), "출처  " + sm["source"], font=font("Regular", 28), fill=(150, 150, 156))
 
 def render(spec, frames_dir, out):
-    caps = [(c["start"], c["end"], caption_box(c["text"])) for c in spec["captions"]]
+    cap_fn = caption_stroke if spec.get("caption_style") == "stroke" else caption_box
+    caps = [(c["start"], c["end"], cap_fn(c["text"])) for c in spec["captions"]]
     chips = [(c["start"], c["end"], chip(c["text"]), c["y"]) for c in spec.get("chips", [])]
     cnt = spec.get("counter")
     n = spec["frames"]
