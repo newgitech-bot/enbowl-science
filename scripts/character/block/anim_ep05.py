@@ -205,15 +205,15 @@ def frame(f):
         ty = (ry + 0.5) * (1 - w) + (by - 0.3) * w
         W.look(cam, (3.3, ty - 1.9, 1.15), (0.3 + 0.1 * w, ty, 0.5 - 0.2 * w), 30)
     elif name == "pins":
-        hit_t = 0.9
-        s = 0.72 + 0.28 * min(1, t / hit_t)
+        hit_t = min(2.4, 0.3 * (f1 - f0) / FPS)
+        s = 0.5 + 0.5 * min(1, t / hit_t)
         pb = path(s, 0.3)
         if t >= hit_t:
             pb = Vector((0.06 + 0.2 * (t - hit_t), L - 0.95 + 1.6 * (t - hit_t), BR))
         BALL.location = pb
         BALL.rotation_euler = (-f * 0.5, 0, 0)
         pins_pose(PINS, t - hit_t)
-        W.look(cam, (-1.1, L - 4.6, 0.75), (0.15, L - 0.8, 0.25), 34)
+        W.look(cam, (-1.1, L - 4.6, 0.75), (0.15, L - 0.8, 0.25), 34 + 0.8 * t)
     elif name == "speed":
         s = min(1.0, 0.05 + t / 6.4)
         BALL.location = path(s, 0.3)

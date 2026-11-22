@@ -1,0 +1,45 @@
+{
+ "shots": [
+  {
+   "name": "hook",
+   "start": 0.0,
+   "end": 6.57
+  },
+  {
+   "name": "intro",
+   "start": 6.57,
+   "end": 12.7
+  },
+  {
+   "name": "compare",
+   "start": 12.7,
+   "end": 20.87
+  },
+  {
+   "name": "mind",
+   "start": 20.87,
+   "end": 27.08
+  },
+  {
+   "name": "slowmo",
+   "start": 27.08,
+   "end": 34.41
+  },
+  {
+   "name": "pins",
+   "start": 34.41,
+   "end": 43.38
+  },
+  {
+   "name": "speed",
+   "start": 43.38,
+   "end": 51.55
+  },
+  {
+   "name": "summary",
+   "start": 51.55,
+   "end": 61.35
+  }
+ ],
+ "total": 61.35
+}
