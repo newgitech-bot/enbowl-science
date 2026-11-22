@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 POST = Path("posts/2026-11-27-EP05")
-NDIR = Path(sys.argv[1])
+NDIR = Path(sys.argv[1]) if len(sys.argv) > 1 else POST / "narration_clone"
 OLD = [("hook", 0, 3), ("intro", 3, 8), ("compare", 8, 15), ("mind", 15, 20), ("slowmo", 20, 27),
        ("pins", 27, 32), ("speed", 32, 38), ("summary", 38, 46)]
 LEAD, TAIL = 0.2, 0.45
@@ -35,17 +35,25 @@ old_c = json.loads(subprocess.run(["git", "show", f"main:{POST}/content.json"], 
 old_a = json.loads(subprocess.run(["git", "show", f"main:{POST}/audio.json"], capture_output=True, text=True,
                                   check=True).stdout)
 ov = old_c["overlay"]
-TXT = {   # 해요체 자막
-    "세계 랭커 *11명*이\n실험에 참여했습니다": "세계 랭커 *11명*이\n직접 실험했어요",
-    "같은 선수에게\n*두 번* 던지게 했습니다": "같은 선수가\n*두 번* 던졌어요",
-    "압박 조건에는\n*이런 장치*를 걸었습니다": "압박 조건엔\n*이런 장치*를 걸었어요",
-    "마음은 어떻게\n변했을까?": "마음은 어떻게\n변했을까요?",
-    "그런데 *몸은 먼저*\n서둘렀습니다": "그런데 *몸이 먼저*\n서둘렀어요",
-    "스트라이크든 아니든\n볼 속도는 *똑같았습니다*": "스트라이크든 아니든\n볼 속도는 *똑같았어요*",
-    "문제는 힘이 아니라\n*리듬*입니다": "힘이 아니라\n*리듬* 문제였어요",
-}
-for c in ov["captions"]:
-    c["text"] = TXT.get(c["text"], c["text"])
+CAPS = [   # 대본과 같은 말·같은 용어(부담)로 다시 쓴 자막 (원래 순서대로 9개)
+    "중요한 프레임에서만\n공이 *빠질 때*",
+    "세계 100위 안 선수\n*11명*이 확인했어요",
+    "같은 선수가\n*두 번* 던졌어요",
+    "부담 조건엔\n*이런 장치*를 걸었어요",
+    "마음은\n어떻게 달라졌을까요?",
+    "*몸이 먼저*\n빨라졌어요",
+    "그 결과",
+    "볼 속도는\n*거의 같았어요*",
+    "힘보다 *리듬*이\n중요할 수 있어요",
+]
+for c, txt in zip(ov["captions"], CAPS):
+    c["text"] = txt
+for c in ov["chips"]:
+    c["text"] = c["text"].replace("두 경우 모두 7.58 m/s", "스트라이크·아닌 공 모두 7.58 m/s")
+for c in ov["labels"]:
+    c["text"] = c["text"].replace("압박", "부담")
+ov["gauges"]["title"] = ov["gauges"]["title"].replace("압박", "부담")
+ov["counter"]["note"] = ov["counter"]["note"].replace("압박", "부담")
 for key in ("captions", "chips", "labels"):
     for c in ov.get(key, []):
         c["start"], c["end"] = remap(c["start"]), remap(c["end"])
@@ -53,9 +61,9 @@ for key in ("gauges", "counter"):
     ov[key]["start"], ov[key]["end"] = remap(ov[key]["start"]), remap(ov[key]["end"])
 sm = ov["summary"]
 sm["start"] = remap(sm["start"])
-sm["result"] = sm["result"].replace("서두릅니다", "서둘러요")
+sm["result"] = "부담을 받으면\n마음보다 *몸이 먼저*\n빨라져요"
 sm["tips_label"] = "연구 시사점"
-sm["tips"] = [x.replace("있다", "있어요").replace("만든다", "만들어요") for x in sm["tips"]]
+sm["tips"] = ["포스텝~슬라이드는 *평소 속도*로", "자신 있어도 *몸은 서두를 수* 있어요", "힘보다 *리듬*을 지키기"]
 ov["frames"] = int(round(TOTAL * 24))
 ov["caption_style"] = "stroke"
 c = json.load(open(POST / "content.json", encoding="utf-8"))
