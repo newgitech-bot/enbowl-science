@@ -1,6 +1,6 @@
 {
-  "voice": "clone",
-  "speed": 1.05,
+  "voice": "google:ko-KR-Chirp3-HD-Callirrhoe",
+  "speed": 1.1,
   "lines": [
     {
       "scene": "hook",
