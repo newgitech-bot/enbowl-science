@@ -43,3 +43,21 @@ for i, line in enumerate(spec["lines"]):
     info.append({**line, "file": f.name, "duration": round(d, 3)})
     print(f.name, round(d, 2), line["text"], flush=True)
 (out / "durations.json").write_text(json.dumps(info, ensure_ascii=False, indent=2), encoding="utf-8")
+
+# 지시문(instruct)이 있으면 같은 대본을 '밝고 활기찬 말투' 버전으로 한 벌 더 만든다 (비교용)
+instr = spec.get("instruct", "").strip()
+if instr:
+    out2 = post / (outname + "_fun"); out2.mkdir(exist_ok=True)
+    info2 = []
+    try:
+        for i, line in enumerate(spec["lines"]):
+            f = out2 / f"{i:02d}_{line['scene']}.wav"
+            chunks = [r["tts_speech"] for r in cv.inference_instruct2(line["text"], instr + "<|endofprompt|>", prompt, stream=False)]
+            sf.write(str(f), torch.cat(chunks, dim=1).squeeze(0).cpu().numpy(), cv.sample_rate, subtype="PCM_16")
+            with wave.open(str(f)) as w:
+                d = w.getnframes() / w.getframerate()
+            info2.append({**line, "file": f.name, "duration": round(d, 3)})
+            print("fun", f.name, round(d, 2), flush=True)
+        (out2 / "durations.json").write_text(json.dumps(info2, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception as e:  # noqa: BLE001
+        print("instruct 실패:", e)

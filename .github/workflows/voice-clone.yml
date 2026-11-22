@@ -63,5 +63,5 @@ jobs:
         run: |
           git config user.name "enbowl-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add posts/*/narration_clone/
+          git add posts/*/narration_clone*/
           git diff --cached --quiet || (git commit -m "목소리 복제 나레이션 [skip ci]" && git pull --rebase -q && git push)
