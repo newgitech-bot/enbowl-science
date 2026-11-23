@@ -6,6 +6,60 @@
       "prompt": "Cover scene. Bright clean bowling alley with glossy light-wood lanes and white pins softly blurred far in the background. The shiba dog sits on a bench right after a game, a purple bowling ball resting beside it. With its left paw it gently holds its right wrist on the thumb side, looking down at the wrist with a slightly worried, mildly pained but cute expression. A small soft red glow marks the thumb side of the right wrist. Character centered in the upper-middle part of the frame; keep the bottom third of the image calm and simple (plain floor) so text can be placed there later. Vertical portrait composition.",
       "size": "1024x1536",
       "quality": "medium"
+    },
+    {
+      "out": "assets/gpt/ep06/02_think.png",
+      "refs": [
+        "assets/gpt/ep06/01_cover.png"
+      ],
+      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. The shiba dog stands holding a purple bowling ball in its right paw at its side, looking at its right wrist with a puzzled, slightly worried face, a small question-mark-like sweat drop near its head (no actual symbols or text). Mild red glow on the thumb side of the right wrist.",
+      "size": "1024x1024",
+      "quality": "medium"
+    },
+    {
+      "out": "assets/gpt/ep06/03_check.png",
+      "refs": [
+        "assets/gpt/ep06/01_cover.png"
+      ],
+      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. The shiba dog sits on a round stool calmly holding out its right paw, palm side up, while a kind human doctor in a white coat (only hands and arms visible from the right side of the frame) gently presses the thumb side of the dog's wrist. A clipboard with blank paper rests on the dog's lap.",
+      "size": "1024x1024",
+      "quality": "medium"
+    },
+    {
+      "out": "assets/gpt/ep06/04_hands.png",
+      "refs": [
+        "assets/gpt/ep06/01_cover.png"
+      ],
+      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. The shiba dog stands facing the viewer and raises both paws up beside its face, palms facing the viewer. The right paw (on the viewer's left side) has a soft red glow on the thumb side of the wrist and a small wince; the left paw (on the viewer's right side) looks completely normal. Expression: half wincing, half surprised.",
+      "size": "1024x1024",
+      "quality": "medium"
+    },
+    {
+      "out": "assets/gpt/ep06/06_wrist.png",
+      "refs": [
+        "assets/gpt/ep06/01_cover.png"
+      ],
+      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. The shiba dog sits and points with its left paw at the thumb side of its right wrist, which has a soft red glow and a lighter beige patch, explaining like a teacher with a gentle serious face. Half-body framing, the wrist clearly visible and large in the image.",
+      "size": "1024x1024",
+      "quality": "medium"
+    },
+    {
+      "out": "assets/gpt/ep06/08_keep.png",
+      "refs": [
+        "assets/gpt/ep06/01_cover.png"
+      ],
+      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. The shiba dog in the middle of a bowling delivery, sliding forward and releasing a purple bowling ball with its right arm, its right wrist wrapped in a white athletic bandage, a small sweat drop and slightly gritted teeth, determined but a little pained.",
+      "size": "1024x1024",
+      "quality": "medium"
+    },
+    {
+      "out": "assets/gpt/ep06/10_cheer.png",
+      "refs": [
+        "assets/gpt/ep06/01_cover.png"
+      ],
+      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. The shiba dog stands happily doing a gentle wrist stretch, its left paw softly pulling back the fingers of its extended right paw, with a calm relaxed smile. A purple bowling ball rests on the floor beside its feet.",
+      "size": "1024x1024",
+      "quality": "medium"
     }
   ]
 }
