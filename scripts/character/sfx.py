@@ -119,5 +119,26 @@ def build(spec, out_path):
     with wave.open(out_path, "wb") as w:
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes(pcm.tobytes())
 
+def add_bgm(spec, path):
+    """배경음(bgm.py, 코드로 만든 곡)을 깔고, 목소리·효과음이 나올 때는 자동으로 줄인다.
+    audio.json 에 "bgm": false 를 넣으면 끈다. "bgm_db" 로 기본 크기(-11dB)를 바꿀 수 있다."""
+    if spec.get("bgm") is False: return
+    import os, tempfile
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import bgm
+    x = bgm.make(spec["duration"])
+    tmp = tempfile.mkdtemp(); b, v = f"{tmp}/bgm.wav", f"{tmp}/voice.wav"
+    os.replace(path, v)
+    with wave.open(b, "wb") as w:
+        w.setnchannels(1); w.setsampwidth(2); w.setframerate(bgm.SR); w.writeframes((x * 32767).astype(np.int16).tobytes())
+    db = spec.get("bgm_db", -11)
+    fc = (f"[1:a]volume={db}dB[b];[0:a]asplit=2[v][k];"
+          "[b][k]sidechaincompress=threshold=0.06:ratio=2.5:attack=20:release=500[bd];"
+          "[v][bd]amix=inputs=2:normalize=0,alimiter=limit=0.95[o]")
+    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", v, "-i", b, "-filter_complex", fc,
+                    "-map", "[o]", "-ac", "1", "-ar", str(SR), path], check=True)
+
 if __name__ == "__main__":
-    build(json.load(open(sys.argv[1])), sys.argv[2])
+    spec = json.load(open(sys.argv[1]))
+    build(spec, sys.argv[2])
+    add_bgm(spec, sys.argv[2])
