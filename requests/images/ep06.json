@@ -1,0 +1,11 @@
+{
+  "character": "a chubby cute shiba inu dog bowler with orange and cream fur, wearing a plum-purple short-sleeve bowling shirt with a lemon-yellow collar, dark gray pants",
+  "items": [
+    {
+      "out": "assets/gpt/ep06/01_cover.png",
+      "prompt": "Cover scene. Bright clean bowling alley with glossy light-wood lanes and white pins softly blurred far in the background. The shiba dog sits on a bench right after a game, a purple bowling ball resting beside it. With its left paw it gently holds its right wrist on the thumb side, looking down at the wrist with a slightly worried, mildly pained but cute expression. A small soft red glow marks the thumb side of the right wrist. Character centered in the upper-middle part of the frame; keep the bottom third of the image calm and simple (plain floor) so text can be placed there later. Vertical portrait composition.",
+      "size": "1024x1536",
+      "quality": "medium"
+    }
+  ]
+}
