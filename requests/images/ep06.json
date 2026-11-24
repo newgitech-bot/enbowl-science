@@ -12,7 +12,7 @@
       "refs": [
         "assets/gpt/ep06/01_cover.png"
       ],
-      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. The shiba dog stands holding a purple bowling ball in its right paw at its side, looking at its right wrist with a puzzled, slightly worried face, a small question-mark-like sweat drop near its head (no actual symbols or text). Mild red glow on the thumb side of the right wrist.",
+      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. The shiba dog stands facing the viewer. IMPORTANT ANATOMY: the dog has exactly TWO arms and two paws, no extra limbs. Its left paw gently holds its own right wrist in front of its chest, so both arms are used for this one gesture. A purple bowling ball rests on the floor next to its feet (not held). Puzzled, slightly worried face with a small sweat drop near the head (no symbols or text). Mild red glow on the thumb side of the right wrist.",
       "size": "1024x1024",
       "quality": "medium"
     },
