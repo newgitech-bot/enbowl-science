@@ -256,44 +256,24 @@ def s_why():
     footer(d); return img
 
 
-# 10. 정리: 결과 한 문단 + 앞으로 할 일 4가지(이유와 함께) + 한계
+# 10. 정리
 def s_summary():
     img, d = base()
-    rc(d, 64, "BOWLING SCIENCE · 정리", font("Bold", 30), 44, T["gray"])
-    # 결과
-    d.rounded_rectangle((70, 130, W - 70, 330), radius=24, fill=T["soft"])
-    d.text((104, 150), "결과", font=font("Bold", 32), fill=T["main"])
-    for i, t in enumerate(["볼 쥐는 손목에 증상이 있던 선수는 66.7%, 반대 손은 2.6%예요.",
-                           "절반이 넘는 53.8%에게 드퀘르뱅 건초염 소견이 나왔고,",
-                           "그립 방식에 따른 차이는 없었어요."]):
-        f = font("Medium", 31); assert d.textlength(t, font=f) < W - 140 - 68, t
-        d.text((104, 200 + i * 42), t, font=f, fill=T["ink"])
-    # 앞으로 할 일
-    y = 356
-    d.rounded_rectangle((70, y, W - 70, y + 680), radius=24, fill=T["main"])
-    d.text((104, y + 22), "연구 시사점 · 앞으로 이렇게 해 보세요", font=font("Bold", 36), fill=T["mark"])
-    steps = [("통증을 기록해요", ["게임 뒤 손목 엄지 쪽이 다음 날까지 아프면", "날짜와 게임 수를 적어 두세요."]),
-             ("아픈 날은 게임 수를 줄여요", ["같은 통증이 반복되면 던지는 양을 줄이고", "손 전문 진료를 받아 보세요."]),
-             ("엄지 구멍을 점검해요", ["연구진은 개인에게 맞춘 장비를 권했어요.", "구멍 크기와 간격이 손에 맞는지 확인해 보세요."]),
-             ("쉬는 날을 넣어요", ["연구진은 훈련량이 회복을 늦출 수 있다고 봤어요.", "몰아서 던지기보다 손목이 쉴 날을 두세요."])]
-    yy = y + 90
-    for n, (h, body) in enumerate(steps, 1):
-        d.ellipse((104, yy + 2, 152, yy + 50), fill=T["mark"])
-        ctext(d, 128, yy + 6, str(n), font("Black", 30), T["main"])
-        d.text((176, yy + 4), h, font=font("Bold", 34), fill=WHITE)
-        for j, t in enumerate(body):
-            f = font("Medium", 29); assert d.textlength(t, font=f) < W - 70 - 176 - 30, t
-            d.text((176, yy + 54 + j * 40), t, font=f, fill=(236, 226, 244))
-        yy += 146
-    # 한계
-    y = 1060
-    d.rounded_rectangle((70, y, W - 70, y + 190), radius=24, fill=T["soft"])
-    d.text((104, y + 20), "한계", font=font("Bold", 32), fill=T["main"])
-    for i, t in enumerate(["말레이시아 국가대표 39명만 조사했고, 비교할 일반 볼러가 없어요.",
-                           "영상 촬영 없이 진찰과 설문(선수의 기억)으로 판단했어요."]):
-        f = font("Medium", 29); assert d.textlength(t, font=f) < W - 140 - 68, t
-        d.text((104, y + 70 + i * 42), t, font=f, fill=T["ink"])
-    ctext(d, W / 2, H - 58, "출처: Lee et al. (2021), Malaysian Orthopaedic Journal, 15(1), 113-118", font("Regular", 22), T["gray"])
+    rc(d, 70, "BOWLING SCIENCE · 정리", font("Bold", 30), 44, T["gray"])
+    def sec(y, title, lines, fill):
+        d.rounded_rectangle((70, y, W - 70, y + 58 + 50 * len(lines)), radius=24, fill=fill)
+        d.text((104, y + 18), title, font=font("Bold", 32), fill=T["main"] if fill != T["main"] else T["mark"])
+        for i, t in enumerate(lines):
+            f = font("SemiBold", 31); assert d.textlength(t, font=f) < W - 140 - 260, t
+            d.text((300, y + 18 + i * 50), t, font=f, fill=WHITE if fill == T["main"] else T["ink"])
+        return y + 58 + 50 * len(lines) + 22
+    y = 140
+    y = sec(y, "결과", ["볼 쥐는 손목 증상 66.7% (반대 손 2.6%)", "드퀘르뱅 건초염 소견 53.8% (21명)", "그립 방식에 따른 차이 없음"], T["soft"])
+    y = sec(y, "연구 시사점", ["손목 엄지 쪽 통증이 다음 날까지 남으면", "날짜와 게임 수를 적어 두기", "반복되면 훈련량 줄이고 손 전문 진료", "엄지 구멍이 내 손에 맞는지 점검하기"], T["main"])
+    y = sec(y, "한계", ["말레이시아 국가대표 39명만 조사", "비교할 일반 볼러 집단 없음", "영상 촬영 없이 진찰과 설문으로 판단"], T["soft"])
+    a = art("10_cheer", h=1290 - y - 20, w=360); paste_c(img, a, W / 2, y)
+    f = font("Regular", 22)
+    ctext(d, W / 2, H - 52, "출처: Lee et al. (2021), Malaysian Orthopaedic Journal, 15(1), 113-118", f, T["gray"])
     return img
 
 
