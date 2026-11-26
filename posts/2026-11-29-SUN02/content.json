@@ -1,0 +1,28 @@
+{
+  "format": "image",
+  "series": "BOWLING SUNDAY",
+  "sun": {
+    "no": 2,
+    "kind": "myth",
+    "type": "속설 검증",
+    "myth": "*줄 달린 핀* 볼링장도\n점수는 똑같이 나온다?",
+    "verdict": "반만 맞아요",
+    "number": "3.4핀",
+    "fact": "에버리지가 낮아졌어요",
+    "note": "교체 후 볼러 10,658명 · USBC (2025)",
+    "art": "assets/gpt/sun02/myth.png",
+    "palette": {
+      "main": [
+        0,
+        128,
+        118
+      ],
+      "mark": [
+        255,
+        190,
+        170
+      ]
+    }
+  },
+  "publish_date": "2026-11-29"
+}

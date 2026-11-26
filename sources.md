@@ -9,4 +9,4 @@
 | 07 | 2026-11-27 | 릴스 | 논문 | Lee & Chong (2018) 압박감과 투구 동작, ISBS | https://core.ac.uk/download/235627761.pdf |
 | SUN01 | 2026-11-22 | 단편 이미지 | 공감 | 10번 핀 하나 남았을 때 (회색 고양이) | - |
 | 06 | 2026-11-26 | 캐러셀 | 논문 | Lee et al. (2021) 말레이시아 국가대표 39명 손목·손 증상, Malays Orthop J | https://doi.org/10.5704/MOJ.2103.017 |
-| SUN02 | 2026-11-29 | 단편 이미지 | 용어 | 브루클린 스트라이크 (시바견, PBA Bowling Lingo) | https://www.pba.com/about/bowling-lingo |
+| SUN02 | 2026-11-29 | 단편 이미지 | 속설 검증 | 스트링 핀세터 점수 차이 (펭귄). USBC 2023 통제 시험 + 2025 에버리지 비교 | https://bowl.com/getmedia/1a5eb52e-2600-4d6e-804e-e7549f14bd82/string-pinsetter-scoring-report_2025.pdf |
