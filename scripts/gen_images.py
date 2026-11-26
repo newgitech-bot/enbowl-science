@@ -12,7 +12,7 @@ requests/images/*.json 요청 파일을 읽어, 아직 결과가 없는 항목�
 }
 - 캐릭터는 에피소드마다 바꾼다. 한 에피소드 안에서는 표지 그림을 refs로 넣어 같은 캐릭터를 유지한다.
 - items는 위에서부터 순서대로 만들어지므로, 앞에서 만든 그림을 뒤 항목의 refs로 쓸 수 있다.
-- 공통 화풍(흰 배경, 굵은 외곽선, 플랫 2D, 글자 없음)은 STYLE에 고정.
+- 공통 화풍(흰 배경, 굵은 외곽선, 플랫 2D, 글자 없음)은 STYLE에 고정. 요청 파일(또는 항목)에 "style" 을 주면 그 문장으로 바꾼다(BOWLING SUNDAY 실루엣 등).
 """
 import base64
 import glob
@@ -32,8 +32,8 @@ STYLE = (
 KEEP = "Keep the character exactly the same as in the reference image (face, colors, outfit, proportions). "
 
 
-def build_prompt(character, item):
-    parts = [STYLE]
+def build_prompt(character, item, style=None):
+    parts = [item.get("style", style if style is not None else STYLE)]
     if character:
         parts.append(f"Main character: {character}. ")
     if item.get("refs"):
@@ -42,11 +42,11 @@ def build_prompt(character, item):
     return "".join(parts)
 
 
-def call(model, item, key, character=""):
+def call(model, item, key, character="", style=None):
     headers = {"Authorization": f"Bearer {key}"}
     data = {
         "model": model,
-        "prompt": build_prompt(character, item),
+        "prompt": build_prompt(character, item, style),
         "size": item.get("size", "1024x1024"),
         "quality": item.get("quality", "medium"),
         "n": "1",
@@ -68,13 +68,14 @@ def main():
     for req in sorted(glob.glob("requests/images/*.json")):
         spec = json.load(open(req, encoding="utf-8"))
         character = spec.get("character", "")
+        style = spec.get("style")  # 있으면 기본 STYLE(귀여운 카드뉴스 화풍) 대신 사용
         for item in spec["items"]:
             out = item["out"]
             if os.path.exists(out):
                 print(f"skip {out} (이미 있음)")
                 continue
             for model in MODELS:
-                r = call(model, item, key, character)
+                r = call(model, item, key, character, style)
                 if r.ok:
                     break
                 print(f"{model} 실패 {r.status_code}: {r.text[:500]}")

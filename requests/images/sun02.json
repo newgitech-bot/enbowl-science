@@ -1,0 +1,11 @@
+{
+  "style": "Minimal flat vector silhouette illustration, clean modern sports infographic look, realistic athletic human proportions, no outlines, no facial features, no text, no letters, no numbers anywhere in the image. ",
+  "items": [
+    {
+      "out": "assets/gpt/sun02/motion.png",
+      "prompt": "A multiple-exposure motion sequence of ONE right-handed ten-pin bowler seen exactly from the side, facing and moving to the right along a flat floor line, showing the five phases of a four-step delivery overlapping slightly from left to right: (1) push-away: standing upright, both hands pushing the ball forward at waist height; (2) downswing: walking step, right arm hanging straight down with the ball beside the right leg; (3) backswing: ball raised high behind the body at shoulder height, torso leaning slightly forward; (4) release: deep slide on the LEFT foot with the left knee bent about 45 degrees, torso leaning forward, right leg extended far behind with its toe on the floor, left arm out to the side for balance, the ball leaving the right hand low near the left ankle; (5) follow-through: same leg position as the release, right arm swung forward and up above shoulder height. Phases 1, 2, 3 and 5 are translucent light warm gray silhouettes (more faint for earlier phases). Phase 4 (release) is the clearest, solid dark charcoal gray (#2A2A2E), and on that release figure ONLY the front of the bent LEFT thigh (quadriceps) and the LEFT buttock (gluteus) are filled solid orange (#FF7200). Bowling ball is a simple dark circle. Plain flat off-white background (#F6F6F3) filling the whole image, one thin light gray floor line under the feet, nothing else: no lane, no pins, no shadows, no text.",
+      "size": "1536x1024",
+      "quality": "high"
+    }
+  ]
+}
