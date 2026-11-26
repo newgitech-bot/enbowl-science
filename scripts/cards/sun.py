@@ -14,6 +14,12 @@
   {"kind": "phases", "type": "지도서 한 장", "no": 2, "title": "...", "phases": [
      {"pose": "push"|"down"|"back"|"release"|"follow", "name": "푸시어웨이", "muscles": "대둔근 · 대퇴사두근", "hi": ["glute"]}, ...],
    "focus": 3, "focus_title": "4 릴리스", "focus_text": "...", "source": "출처 한 줄"}
+연속 동작 (kind "motion", 2026-11-26 준서님 선택: 잔상 스타일, 상단 BOWLING SUNDAY 라벨 없음):
+  GPT 실루엣 연속 동작 그림 1장(art, 배경은 그림 모서리 색으로 맞춤) + 타임라인 + 강조 설명.
+  {"kind": "motion", "tag": "지도서 한 장 · No.02", "title": "...", "art": "assets/gpt/sunNN/motion.png",
+   "crop": [y0, y1], "phases": [{"name": "푸시어웨이", "muscles": "대둔근 · 대퇴사두근", "x": 0.09}, ...],
+   "focus": 3, "focus_title": "...", "focus_text": "...", "todo": "...", "source": "..."}
+  phases[].x 는 그림 너비 대비 그 단계 인물의 가운데 위치(0~1).
 kind 가 없으면 예전 형식(SUN01):
   {"type": "공감 한 컷", "headline": "*10번 핀* 하나\\n남았을 때", "sub": "...", "art": "assets/gpt/sun01/main.png",
    "palette": {"main": [R,G,B], "mark": [R,G,B]}}
@@ -186,8 +192,60 @@ def make_phases(spec, root):
     return img
 
 
+def make_motion(spec, root):
+    from brand import ORANGE, INK as BINK, GRAY as BGRAY, LINE
+    art = Image.open(root / spec["art"]).convert("RGB")
+    bg = art.getpixel((4, 4))
+    img = Image.new("RGB", (W, H), bg)
+    d = ImageDraw.Draw(img)
+    if spec.get("tag"):
+        d.text((72, 70), spec["tag"], font=font("SemiBold", 26), fill=BGRAY)
+    y = 120
+    for line in spec["title"].split("\n"):
+        d.text((72, y), line, font=font("ExtraBold", 70), fill=BINK)
+        y += 90
+    y0, y1 = spec.get("crop", [0, art.height])
+    band = art.crop((0, y0, art.width, y1))
+    sc = W / art.width
+    band = band.resize((W, int(band.height * sc)), Image.LANCZOS)
+    top = y + 10
+    img.paste(band, (0, top))
+    ty = top + band.height + 26
+    d.line((60, ty, W - 60, ty), fill=(206, 206, 208), width=3)
+    for i, p in enumerate(spec["phases"]):
+        on = i == spec.get("focus")
+        x = p["x"] * W
+        r = 14 if on else 9
+        d.ellipse((x - r, ty - r, x + r, ty + r), fill=ORANGE if on else (176, 176, 180))
+        fn = font("ExtraBold" if on else "Bold", 25)
+        d.text((x - d.textlength(p["name"], font=fn) / 2, ty + 24), p["name"], font=fn, fill=ORANGE if on else BINK)
+        fm = font("Medium", 19)
+        my = ty + 62
+        for ml in p["muscles"].split("\n"):
+            d.text((x - d.textlength(ml, font=fm) / 2, my), ml, font=fm, fill=BINK if on else BGRAY)
+            my += 27
+    y = ty + 190
+    d.line((72, y, W - 72, y), fill=LINE, width=2)
+    y += 28
+    d.text((72, y), spec["focus_title"], font=font("ExtraBold", 33), fill=ORANGE)
+    y += 52
+    for line in spec["focus_text"].split("\n"):
+        d.text((72, y), line, font=font("SemiBold", 30), fill=BINK)
+        y += 44
+    if spec.get("todo"):
+        y += 12
+        for line in spec["todo"].split("\n"):
+            d.text((72, y), line, font=font("Medium", 27), fill=(80, 80, 86))
+            y += 40
+    d.text((72, H - 100), spec["source"], font=font("Medium", 20), fill=BGRAY)
+    d.text((72, H - 64), "@enbowl_korea", font=font("SemiBold", 22), fill=BGRAY)
+    return img
+
+
 def make(spec, root):
     pal = spec.get("palette", {})
+    if spec.get("kind") == "motion":
+        return make_motion(spec, root)
     if spec.get("kind") == "phases":
         return make_phases(spec, root)
     if spec.get("kind") == "myth":
