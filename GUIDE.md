@@ -63,22 +63,24 @@ BOWLING SCIENCE EP.NN | 논문 리뷰   (또는 연구 리뷰 / 볼링 뉴스)
 - **비용 한도: 에피소드당 그림 최대 12장(약 1,200원)**. 같은 장면 재생성은 2번까지. 넘으면 있는 그림으로 마무리하고 PR 에 적는다.
 - 워크플로가 실패하면(키 오류, 잔액 부족 등) 그림 없이 코드 일러스트로 카드를 완성하고 PR 에 원인을 적는다.
 
-## 5. 릴스 (금)
-### 형식
-- 밝은 볼링장 배경의 3D 캐릭터(Blender, 코드 렌더) + 준서님 목소리 복제 나레이션 + 잦은 효과음.
-- 40~60초. 첫 3초에 질문/결론. 내용에 따라 장면 구도를 바꾼다(비교 장면은 두 캐릭터, 숫자 장면은 게이지·카운터, 투구 장면은 슬로모션 등).
+## 5. 릴스 (화·금)
+### 형식 (기준 예시: posts/2026-11-27-EP05)
+- **블록 캐릭터 + 블록 볼링장** (Blender, Cycles, 코드 렌더). 앤볼 캐릭터: 네모 얼굴, 검은 머리, 주황 헤어밴드(흰 "/"), 주황 셔츠, 이름 없음. 상대·조연은 다른 머리·셔츠 색. 배경은 `scripts/character/block/world.py` 의 `alley()` (레인·핀 조명·네온·전광판·소파·NPC 볼러).
+- **나레이션은 준서님 목소리 복제**(`"voice": "clone"`, 2026-11-23 새 녹음 참고 음성). 실패하면 `"google:ko-KR-Chirp3-HD-Callirrhoe"`, speed 1.1.
+- **배경음 자동**: `sfx.py` 가 `bgm.py`(코드로 만든 로파이 곡)를 깔고 목소리 나올 때 줄인다. 끌 때만 audio.json 에 `"bgm": false`.
+- 효과음은 자주: 장면 전환 whoosh, 자막 pop, 볼 굴러감 roll, 핀 맞을 때 pin_crash, 숫자 tick, 긴장 heartbeat·drip 등.
+- 자막은 `"caption_style": "stroke"` (흰 글씨 + 남색 테두리, `*강조*` 는 노란색).
+- 40~65초. 첫 3초에 질문/결론. 내용에 따라 장면 구도를 바꾼다(비교 장면은 두 캐릭터, 숫자 장면은 게이지·카운터, 투구 장면은 슬로모션 등). 직전 릴스와 같은 샷 구성을 반복하지 않는다.
 - 영상 좌상단에 BOWLING SCIENCE 라벨을 넣지 않는다. 마지막 정리 카드에만 "BOWLING SCIENCE · 정리" 와 결과·연구 시사점·출처.
 - "Enjoy Bowling" 으로 끝내지 않는다. "지공사 팁" 표현 금지.
-- 캐릭터와 볼 비율: 캐릭터가 화면을 꽉 채우지 않게(EP05 의 CS=0.72, 볼 반지름 BR=0.13 기준).
-- 효과음은 자주: 장면 전환 whoosh, 자막 pop, 볼 굴러감 roll, 핀 맞을 때 pin_crash, 숫자 tick 등. 배경음악은 넣지 않는다.
 
 ### 만드는 순서
-1. 환경: `pip install bpy==5.3.0 --break-system-packages` (없으면), ffmpeg 확인. 한글 폰트는 저장소의 fonts/ (Pretendard) 사용.
-2. `narration.json` 작성(`"voice": "clone"`, scene 별 lines) → 작업 브랜치에 push → `voice-clone.yml` 이 `narration_clone/` 을 커밋(20~40분). 기다렸다가 pull.
-3. `scripts/character/anim.py` 를 복사해 `anim_epNN.py` 로 장면·샷 타이밍을 새로 짠다 (나레이션 길이 `narration_clone/durations.json` 기준). Workbench 엔진, 투명 배경 프레임 렌더.
-4. 오디오: `audio.json`(효과음 이벤트 + ["voice", t, 파일]) → `python scripts/character/sfx.py audio.json audio.wav`.
-5. 합성: `content.json` 의 overlay(자막 `*강조*`, 칩, 게이지, summary_card) → `python scripts/character/compose.py <spec> <frames> reel.mp4 audio.wav`.
-6. `cover.jpg` (릴스 썸네일) 도 만든다.
+1. `narration.json` 작성(`"voice": "clone"`, scene 별 lines, WRITING 6절) → 작업 브랜치에 push → `voice-clone.yml` 이 `narration_clone/` 을 커밋(15~30분). 기다렸다가 pull.
+2. `scripts/character/block/anim_ep05.py` 를 복사해 `anim_epNN.py` 로 샷을 새로 짠다(world.py 의 `character()`, `ball()`, `pin_set()`, `alley()` 사용). `build_ep05.py` 를 참고해 `build_epNN.py` 로 나레이션 길이(`durations.json`)에 맞춘 `timeline.json`(샷 시작·끝 초), `content.json` overlay(자막·칩·게이지·summary), `audio.json`(효과음 + ["voice", 시작초, 파일]) 을 만든다. 샷 길이 = max(기본, 나레이션 + 0.65초), 정리 카드는 + 3.2초.
+3. 로컬 검수: `RW=540 RH=960 SPP=4 python scripts/character/block/anim_epNN.py posts/<폴더>/timeline.json /tmp/f "0,30,90,..."` 로 샷마다 몇 장 렌더해서 직접 본다(구도, 볼·핀이 화면 안에 있는지, 글자 뒤집힘).
+4. 본 렌더: `posts/<폴더>/render.json` 에 `{"anim": "anim_epNN.py", "rev": 1}` 을 push → `render-block.yml` 이 20개로 나눠 렌더(약 2시간)하고 sfx·합성까지 해서 `reel.mp4`, `cover.jpg` 를 같은 브랜치에 커밋한다. 다시 렌더하려면 rev 를 올려 push.
+5. 렌더를 기다리는 동안 캡션·sources.md·PR 을 먼저 올려도 된다. PR 본문에 "영상 렌더 중(약 2시간), 끝나면 같은 PR 에 올라감" 이라고 적고, 끝나면 `reel.mp4` 를 장면별로 확인해 PR 본문의 캡처를 채운다.
+6. 나레이션만 바꿀 때는 다시 렌더하지 않는다: sfx.py 로 오디오만 새로 만들고 ffmpeg 로 영상에 다시 입힌다(`-map 0:v -map 1:a -c:v copy`).
 
 ## 5-1. BOWLING SUNDAY (일, 단편 이미지 1장)
 - 폴더 `posts/YYYY-MM-DD-SUNNN` (SUN 번호는 직전 +1, EP 번호와 별개). `content.json` 의 format 은 `"image"`, 결과물은 `image.jpg`.
