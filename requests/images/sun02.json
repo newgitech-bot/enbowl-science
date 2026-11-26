@@ -1,0 +1,11 @@
+{
+  "character": "a small cheerful shiba inu dog bowler wearing a teal bowling shirt with a white collar",
+  "items": [
+    {
+      "out": "assets/gpt/sun02/main.png",
+      "prompt": "Funny bowling scene viewed from behind and slightly above the bowler, looking down a glossy light-wood bowling lane. The shiba dog stands at the foul line in the lower right, one paw still raised after releasing the ball, looking back over its shoulder at the viewer with a surprised, sheepish grin. A dotted curved trail shows the ball's path: it was meant to curve to the right of the front head pin, but it crossed over and slammed into the LEFT side of the head pin instead. All ten white bowling pins with red stripes are flying and tumbling in every direction at the far end, a clear strike. Small sparkle bursts around the pins. Bright, clean bowling alley background with soft teal and peach pastel colors. Square composition, pin deck clearly visible in the upper center.",
+      "size": "1024x1024",
+      "quality": "medium"
+    }
+  ]
+}
