@@ -10,6 +10,10 @@
   {"kind": "homework", "type": "이번 주 숙제", "title": "*10번 핀*만 10번 노려 보기",
    "for": "10번 핀을 자주 놓치는 볼러", "steps": ["방법 한 줄", "횟수 한 줄", "확인할 것 한 줄"],
    "art": "...", "palette": {...}}
+지도서 한 장 (kind "phases"): 동작 단계별 실루엣 + 한 단계 강조 (앤볼 색: 숯색·주황·흰색)
+  {"kind": "phases", "type": "지도서 한 장", "no": 2, "title": "...", "phases": [
+     {"pose": "push"|"down"|"back"|"release"|"follow", "name": "푸시어웨이", "muscles": "대둔근 · 대퇴사두근", "hi": ["glute"]}, ...],
+   "focus": 3, "focus_title": "4 릴리스", "focus_text": "...", "source": "출처 한 줄"}
 kind 가 없으면 예전 형식(SUN01):
   {"type": "공감 한 컷", "headline": "*10번 핀* 하나\\n남았을 때", "sub": "...", "art": "assets/gpt/sun01/main.png",
    "palette": {"main": [R,G,B], "mark": [R,G,B]}}
@@ -122,8 +126,70 @@ def make_homework(spec, root, main, mark):
     return img
 
 
+def make_phases(spec, root):
+    from brand import ORANGE, INK as BINK, GRAY as BGRAY, LIGHT, WHITE, LINE
+    import figure
+    img = Image.new("RGB", (W, H), LIGHT)
+    d = ImageDraw.Draw(img)
+    fn = font("ExtraBold", 28)
+    d.text((72, 70), "/", font=fn, fill=ORANGE)
+    d.text((72 + d.textlength("/ ", font=fn), 70), f"BOWLING SUNDAY · {spec['type']}", font=fn, fill=BINK)
+    if spec.get("no"):
+        t = f"No.{spec['no']:02d}"
+        d.text((W - 72 - d.textlength(t, font=fn), 70), t, font=fn, fill=BGRAY)
+    y = 138
+    for line in spec["title"].split("\n"):
+        d.text((72, y), line, font=font("ExtraBold", 66), fill=BINK)
+        y += 86
+    phases = spec["phases"]
+    n = len(phases)
+    gap = 14
+    pw = (W - 144 - gap * (n - 1)) / n
+    top = y + 34
+    ph = 500
+    fh = 300 if n <= 4 else 248
+    for i, p in enumerate(phases):
+        x = 72 + i * (pw + gap)
+        on = i == spec.get("focus")
+        d.rounded_rectangle((x, top, x + pw, top + ph), radius=20, fill=WHITE,
+                            outline=ORANGE if on else LINE, width=5 if on else 2)
+        d.text((x + 16, top + 12), str(i + 1), font=font("ExtraBold", 28), fill=ORANGE if on else BGRAY)
+        near = (60, 60, 66) if on else (150, 150, 156)
+        far = (150, 150, 156) if on else (205, 205, 208)
+        xs = [v[0] for v in figure.POSES[p["pose"]].values() if v]
+        cx0 = (min(xs) + max(xs)) / 2
+        figure.draw(d, p["pose"], x + pw / 2 - cx0 * fh, top + 40, fh, near, far,
+                    hi=p.get("hi") if on else None)
+        fy = top + 40 + fh + 14
+        fnm = font("Bold", 24)
+        d.text((x + (pw - d.textlength(p["name"], font=fnm)) / 2, fy), p["name"], font=fnm, fill=BINK if on else BGRAY)
+        fm = font("Medium", 19)
+        my = fy + 40
+        for ml in p["muscles"].split("\n"):
+            d.text((x + (pw - d.textlength(ml, font=fm)) / 2, my), ml, font=fm, fill=BINK if on else BGRAY)
+            my += 28
+    y = top + ph + 34
+    d.text((72, y), spec["focus_title"], font=font("ExtraBold", 34), fill=ORANGE)
+    y += 54
+    for line in spec["focus_text"].split("\n"):
+        d.text((72, y), line, font=font("SemiBold", 31), fill=BINK)
+        y += 46
+    if spec.get("todo"):
+        y += 14
+        d.line((72, y, W - 72, y), fill=LINE, width=2)
+        y += 22
+        for line in spec["todo"].split("\n"):
+            d.text((72, y), line, font=font("Medium", 28), fill=BINK)
+            y += 42
+    d.text((72, H - 100), spec["source"], font=font("Medium", 20), fill=BGRAY)
+    d.text((72, H - 64), "@enbowl_korea", font=font("SemiBold", 22), fill=BGRAY)
+    return img
+
+
 def make(spec, root):
     pal = spec.get("palette", {})
+    if spec.get("kind") == "phases":
+        return make_phases(spec, root)
     if spec.get("kind") == "myth":
         return make_myth(spec, root, tuple(pal.get("main", (88, 60, 160))), tuple(pal.get("mark", (255, 220, 90))))
     if spec.get("kind") == "homework":
