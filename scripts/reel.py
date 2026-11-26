@@ -2,7 +2,7 @@
 """BOWLING SCIENCE 릴스 렌더러 (1080x1920, 30fps, H.264 MP4).
 
 posts/<폴더>/content.json (format: "reel") 의 scenes 를 모션그래픽 영상 reel.mp4 로 만든다.
-사용법: python scripts/reel.py posts/2026-11-27-EP05
+사용법: python scripts/reel.py posts/2026-11-27-EP07
 장면 종류: hook, stat, count, list, statement, outro (형식은 GUIDE.md 참고)
 
 인스타 UI 에 가리지 않도록 내용은 위 260px, 아래 420px, 오른쪽 160px 을 피해서 배치한다.
