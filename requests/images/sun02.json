@@ -1,9 +1,9 @@
 {
-  "character": "a small cheerful shiba inu dog bowler wearing a teal bowling shirt with a white collar",
+  "character": "a small round penguin bowler wearing a coral-red bowling shirt",
   "items": [
     {
-      "out": "assets/gpt/sun02/main.png",
-      "prompt": "Funny bowling scene viewed from behind and slightly above the bowler, looking down a glossy light-wood bowling lane. The shiba dog stands at the foul line in the lower right, one paw still raised after releasing the ball, looking back over its shoulder at the viewer with a surprised, sheepish grin. A dotted curved trail shows the ball's path: it was meant to curve to the right of the front head pin, but it crossed over and slammed into the LEFT side of the head pin instead. All ten white bowling pins with red stripes are flying and tumbling in every direction at the far end, a clear strike. Small sparkle bursts around the pins. Bright, clean bowling alley background with soft teal and peach pastel colors. Square composition, pin deck clearly visible in the upper center.",
+      "out": "assets/gpt/sun02/myth.png",
+      "prompt": "Bowling scene seen from the lane looking at the pin deck. The ten white bowling pins with red stripes each hang from thin dark strings coming down from the machinery above. A bowling ball just hit them: some pins are knocked over but still dangling and swinging on their strings, two strings are tangled together, and three pins are still standing. The penguin stands in the lower left foreground, holding its flippers on its head, staring at the swinging pins with a puzzled, squinting expression. Clean, simple bowling alley background in soft mint and cream colors. Square composition, pin deck clearly visible in the upper center.",
       "size": "1024x1024",
       "quality": "medium"
     }
