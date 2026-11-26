@@ -1,0 +1,30 @@
+name: Fetch Gray's Anatomy plates (public domain)
+
+# 시안용: 위키미디어 공용의 그레이 해부학(1918, 퍼블릭 도메인) 그림을 받아 assets/anatomy/ 에 커밋
+on:
+  push:
+    branches: ["draft/**"]
+    paths: ["requests/anatomy.txt"]
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: |
+          mkdir -p assets/anatomy
+          while read -r f; do
+            [ -z "$f" ] && continue
+            [ -f "assets/anatomy/$f" ] && continue
+            curl -sfL -A "enbowl-anatomy-fetch/1.0 (github actions)" -o "assets/anatomy/$f" "https://commons.wikimedia.org/wiki/Special:FilePath/$f" || echo "실패: $f"
+            sleep 1
+          done < requests/anatomy.txt
+          ls -la assets/anatomy
+      - run: |
+          git config user.name "enbowl-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/anatomy || true
+          git diff --cached --quiet || (git commit -m "해부학 그림 받기 [skip ci]" && git push)
