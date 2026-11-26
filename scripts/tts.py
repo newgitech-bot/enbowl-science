@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """narration.json 의 문장을 MeloTTS(한국어)로 읽어 narration/ 에 wav 와 길이 정보를 저장한다.
 GitHub Actions 에서 실행 (모델 다운로드에 인터넷 필요).
-사용법: python scripts/tts.py posts/2026-11-27-EP05
+사용법: python scripts/tts.py posts/2026-11-27-EP07
 """
 import json, sys, wave
 from pathlib import Path

@@ -1,5 +1,5 @@
 """새 나레이션 길이에 맞춰 EP05 타임라인·오버레이·오디오를 다시 짠다.
-사용법: python build_ep05.py NARRATION_DIR   (예: posts/2026-11-27-EP05/narration_clone_fun)
+사용법: python build_ep05.py NARRATION_DIR   (예: posts/2026-11-27-EP07/narration_clone_fun)
 결과: posts/.../timeline.json, content.json(overlay 갱신), audio.json
 """
 import json
@@ -7,7 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-POST = Path("posts/2026-11-27-EP05")
+POST = Path("posts/2026-11-27-EP07")
 NDIR = Path(sys.argv[1]) if len(sys.argv) > 1 else POST / "narration_clone"
 OLD = [("hook", 0, 3), ("intro", 3, 8), ("compare", 8, 15), ("mind", 15, 20), ("slowmo", 20, 27),
        ("pins", 27, 32), ("speed", 32, 38), ("summary", 38, 46)]
