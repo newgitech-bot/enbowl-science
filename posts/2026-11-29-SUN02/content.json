@@ -1,0 +1,13 @@
+{
+  "format": "image",
+  "series": "BOWLING SUNDAY",
+  "sun": {
+    "no": 2,
+    "type": "용어 한 컷",
+    "headline": "반대쪽 포켓에 맞은 스트라이크,\n*브루클린*",
+    "sub": "오른손 볼러라면 1번과 2번 핀 사이로 들어간 공이에요",
+    "art": "assets/gpt/sun02/main.png",
+    "palette": {"main": [0, 128, 128], "mark": [255, 196, 150]}
+  },
+  "publish_date": "2026-11-29"
+}
