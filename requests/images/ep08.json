@@ -1,0 +1,11 @@
+{
+  "character": "a chubby cute penguin bowler with a black back, white belly and small orange beak and feet, wearing a deep teal short-sleeve bowling shirt with a coral-pink collar",
+  "items": [
+    {
+      "out": "assets/gpt/ep08/01_cover.png",
+      "prompt": "Cover scene. Bright clean bowling alley seen from behind the foul line, glossy light-wood lane stretching away, the front part of the lane shiny and wet-looking with a soft sheen of oil, the far part matte and dry, white pins far in the background. The penguin stands near the foul line holding a teal bowling ball at its chest with both flippers, looking down the lane thoughtfully as if picking a target line. A faint thin glowing line on the lane surface marks where the shiny oiled area ends and the matte area begins. Character in the upper-middle part of the frame; keep the bottom third of the image calm and simple (plain lane surface) so text can be placed there later. Vertical portrait composition.",
+      "size": "1024x1536",
+      "quality": "medium"
+    }
+  ]
+}
