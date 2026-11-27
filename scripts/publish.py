@@ -128,14 +128,28 @@ def publish_reel(post_dir, caption, c, dry_run):
         print(f"릴스 {video.stat().st_size / 1e6:.1f}MB 검사 통과")
         return None
     ig = os.environ["IG_USER_ID"]
-    res = call("POST", f"{ig}/media", media_type="REELS", upload_type="resumable", caption=caption,
-               share_to_feed="true", thumb_offset=str(c.get("thumb_offset_ms", 1600)))
+    common = dict(media_type="REELS", caption=caption, share_to_feed="true",
+                  thumb_offset=str(c.get("thumb_offset_ms", 1600)))
+    # 1) 캐러셀 이미지처럼 GitHub raw URL 을 인스타그램이 직접 가져가게 한다
+    repo = os.environ.get("GITHUB_REPOSITORY", "newgitech-bot/enbowl-science")
+    ref = os.environ.get("IMAGE_REF") or os.environ.get("GITHUB_SHA") or "main"
+    url = f"https://raw.githubusercontent.com/{repo}/{ref}/{video.as_posix()}"
+    try:
+        cid = call("POST", f"{ig}/media", video_url=url, **common)["id"]
+        wait_ready(cid, "릴스(video_url)", tries=120, delay=5)
+        print("영상 업로드: video_url 방식")
+        return cid
+    except SystemExit as e:
+        print(f"video_url 방식 실패, 직접 업로드로 재시도: {e}")
+    # 2) resumable 업로드로 파일을 직접 전송
+    res = call("POST", f"{ig}/media", upload_type="resumable", **common)
     cid, uri = res["id"], res.get("uri") or f"https://rupload.facebook.com/ig-api-upload/{VERSION}/{res['id']}"
     data = video.read_bytes()
     req = urllib.request.Request(uri, data=data, method="POST", headers={
         "Authorization": f"OAuth {os.environ['IG_TOKEN']}",
         "offset": "0",
         "file_size": str(len(data)),
+        "Content-Type": "application/octet-stream",
     })
     print("영상 업로드:", _open(req))
     wait_ready(cid, "릴스", tries=120, delay=5)
