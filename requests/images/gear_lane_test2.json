@@ -1,0 +1,12 @@
+{
+  "style": "Highly detailed 32-bit pixel art, crisp hard-edged pixels, rich dithered shading, metallic highlights, retro game cutaway diagram look. Dark navy blue background with a soft radial glow behind the subject. No text, no letters, no numbers, no labels, no arrows, no logos anywhere in the image. ",
+  "items": [
+    {
+      "out": "assets/gpt/gear_lane/01_side_kegel.png",
+      "refs": ["assets/ref/kegel_fig5_side.png"],
+      "size": "1536x1024",
+      "quality": "medium",
+      "prompt": "Redraw the machine in the reference patent drawing as a full-color side cutaway illustration. Follow the reference layout exactly: a long, low, flat rectangular bowling lane maintenance machine sitting on a maple bowling lane, traveling to the right. No upright handle. Front (right end): a small cleaner spray head on a horizontal rail at the top front, then the cloth wiping unit with a white cloth web running from a supply roll down around a large pressure roller that presses the cloth onto the lane and back up to a take-up roll. Behind it: a squeegee head with two rubber blades touching the lane, connected by a corrugated vacuum hose to a large recovery tank in the upper middle. Middle: a big rubber drive wheel driven by a chain from a motor. Rear (left end): an oil dispensing head on a belt-driven rail, a strip brush angled down to a large round bristle buffer roller touching the lane, an oil pump and tank, and small distance wheels at the very back. Housing walls are bright orange painted sheet metal shown cut away so the inner steel frame, bolts, chains, belts and wiring are visible. The lane under the front of the machine has a dirty brown oil film, the lane behind the buffer roller has a fresh glossy oil sheen. Remove all numbers, leader lines and text from the drawing."
+    }
+  ]
+}
