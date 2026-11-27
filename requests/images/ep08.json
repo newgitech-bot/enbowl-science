@@ -6,6 +6,51 @@
       "prompt": "Cover scene. Bright clean bowling alley seen from behind the foul line, glossy light-wood lane stretching away, the front part of the lane shiny and wet-looking with a soft sheen of oil, the far part matte and dry, white pins far in the background. The penguin stands near the foul line holding a teal bowling ball at its chest with both flippers, looking down the lane thoughtfully as if picking a target line. A faint thin glowing line on the lane surface marks where the shiny oiled area ends and the matte area begins. Character in the upper-middle part of the frame; keep the bottom third of the image calm and simple (plain lane surface) so text can be placed there later. Vertical portrait composition.",
       "size": "1024x1536",
       "quality": "medium"
+    },
+    {
+      "out": "assets/gpt/ep08/02_think.png",
+      "refs": [
+        "assets/gpt/ep08/01_cover.png"
+      ],
+      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. IMPORTANT ANATOMY: exactly two flippers and two feet. The penguin stands facing the viewer, scratching its head with one flipper, puzzled face with a small sweat drop (no symbols or text). A teal bowling ball rests on the floor next to its feet.",
+      "size": "1024x1024",
+      "quality": "medium"
+    },
+    {
+      "out": "assets/gpt/ep08/04_compute.png",
+      "refs": [
+        "assets/gpt/ep08/01_cover.png"
+      ],
+      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. IMPORTANT ANATOMY: exactly two flippers and two feet. The penguin sits on a small stool at a desk typing on a laptop with both flippers, focused curious face. The laptop screen shows only a simple abstract curved line on a plain screen (no text, no numbers). A teal bowling ball sits on the desk beside the laptop.",
+      "size": "1024x1024",
+      "quality": "medium"
+    },
+    {
+      "out": "assets/gpt/ep08/06_slide.png",
+      "refs": [
+        "assets/gpt/ep08/01_cover.png"
+      ],
+      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. IMPORTANT ANATOMY: exactly two flippers and two feet. The penguin happily slides on its belly across a shiny glossy floor patch like on ice, flippers spread out, joyful face, with a teal bowling ball rolling ahead of it. Small sparkle reflections on the glossy floor patch only.",
+      "size": "1024x1024",
+      "quality": "medium"
+    },
+    {
+      "out": "assets/gpt/ep08/09_explain.png",
+      "refs": [
+        "assets/gpt/ep08/01_cover.png"
+      ],
+      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. IMPORTANT ANATOMY: exactly two flippers and two feet. The penguin stands like a teacher, pointing with one flipper to its side at empty space, gentle confident smile, the other flipper holding a teal bowling ball against its belly.",
+      "size": "1024x1024",
+      "quality": "medium"
+    },
+    {
+      "out": "assets/gpt/ep08/10_cheer.png",
+      "refs": [
+        "assets/gpt/ep08/01_cover.png"
+      ],
+      "prompt": "Plain white background, no scenery, character only, centered, full body with some margin around. IMPORTANT ANATOMY: exactly two flippers and two feet. The penguin jumps happily with both flippers raised in celebration, big smile, a teal bowling ball on the floor beside it.",
+      "size": "1024x1024",
+      "quality": "medium"
     }
   ]
 }
