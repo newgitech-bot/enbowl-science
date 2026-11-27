@@ -1,0 +1,11 @@
+{
+  "style": "Highly detailed 32-bit pixel art, crisp hard-edged pixels, rich dithered shading, metallic highlights, retro game cutaway diagram look. Dark navy blue background with a soft radial glow behind the subject. No text, no letters, no numbers, no logos anywhere in the image. ",
+  "items": [
+    {
+      "out": "assets/gpt/gear_lane/03_duster.png",
+      "size": "1024x1536",
+      "quality": "medium",
+      "prompt": "Side cross-section cutaway close-up of a bowling lane conditioning machine (lane maintenance machine) driving to the right over a glossy maple wood bowling lane. Show the cleaning section in great detail: a full roll of clean white cleaning cloth at the top right, the cloth band running down around a black rubber cushion roller that presses the cloth flat onto the lane, then running back up to a take-up roll wound with brownish dirty cloth. In front of it a small metal nozzle sprays a fan of cleaner liquid droplets onto the lane, where the lane ahead has a thin dirty brown oil film. Behind the cushion roller a black rubber squeegee blade touches the lane with a vacuum head and corrugated hose rising to a tank. Machine housing is bright orange (#FF7200) painted sheet metal, cut open to reveal brushed steel brackets, hex bolts, springs, gears, belts, cables and a small electric motor. Lots of fine mechanical detail. The machine section fills the middle of a tall vertical frame, leaving calm dark space in the top 20 percent of the image."
+    }
+  ]
+}
