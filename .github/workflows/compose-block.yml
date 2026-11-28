@@ -1,0 +1,49 @@
+name: Compose block reel (rerun)
+
+# render-block.yml 의 렌더는 끝났는데 합성(compose)만 실패했을 때, 다시 렌더하지 않고 합성만 한다.
+# posts/<폴더>/compose.json ({"run_id": <렌더 실행 번호>}) 를 push 하면 그 실행의 frames-* 아티팩트(2일 보관)를
+# 받아 sfx·합성 후 reel.mp4, cover.jpg 를 같은 브랜치에 커밋한다.
+on:
+  push:
+    branches-ignore: [main]
+    paths: ["posts/**/compose.json"]
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+      - id: f
+        run: |
+          R=$(git diff --name-only HEAD~1 HEAD | grep 'compose.json' | head -1)
+          echo "post=$(dirname $R)" >> $GITHUB_OUTPUT
+          echo "run_id=$(python3 -c "import json;print(json.load(open('$R'))['run_id'])")" >> $GITHUB_OUTPUT
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null && pip install -q numpy pillow
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: frames-*
+          path: frames
+          merge-multiple: true
+          run-id: ${{ steps.f.outputs.run_id }}
+          github-token: ${{ github.token }}
+      - env:
+          POST: ${{ steps.f.outputs.post }}
+        run: |
+          ls frames | wc -l
+          python scripts/character/sfx.py $POST/audio.json /tmp/audio.wav
+          python -c "
+          import json; c=json.load(open('$POST/content.json')); json.dump(c['overlay'], open('/tmp/spec.json','w'), ensure_ascii=False)"
+          python scripts/character/compose.py /tmp/spec.json frames $POST/reel.mp4 /tmp/audio.wav
+          git config user.name "enbowl-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add $POST/reel.mp4 $POST/cover.jpg
+          git commit -m "블록 릴스 합성 [skip ci]" && git pull --rebase -q && git push
